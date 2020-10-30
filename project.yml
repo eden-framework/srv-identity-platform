@@ -1,0 +1,14 @@
+name: srv-identity-platform
+group: eden-framework
+owner: eden-framework
+version: 0.0.0
+description: the sso service for enterprise
+program_language: golang
+workflow:
+  extends: feature-pr-no-test
+scripts:
+  build:
+  - go build -v -o ./build/$PROJECT_NAME -ldflags "-X github.com/eden-framework/apollo.Branch=$DRONE_BRANCH.json"
+    ./cmd
+  - eden generate openapi
+  test: go test ./cmd
