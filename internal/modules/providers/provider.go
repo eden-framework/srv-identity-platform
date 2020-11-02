@@ -6,6 +6,7 @@ import (
 	"github.com/eden-framework/srv-identity-platform/internal/global"
 	"github.com/eden-framework/srv-identity-platform/internal/modules/providers/common"
 	"github.com/eden-framework/srv-identity-platform/internal/modules/providers/dingding"
+	"github.com/eden-framework/srv-identity-platform/internal/modules/providers/ewechat"
 )
 
 var P Provider
@@ -15,6 +16,7 @@ func Initializer() error {
 		P.providers = make(map[string]common.Provider)
 	}
 	P.RegisterProvider(dingding.NewDingDingProvider(global.ProviderConfig.DingDing))
+	P.RegisterProvider(ewechat.NewEWechatProvider(global.ProviderConfig.EWechat))
 	return nil
 }
 

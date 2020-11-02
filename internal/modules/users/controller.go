@@ -17,6 +17,22 @@ func NewUserController(db sqlx.DBExecutor) *UserController {
 	}
 }
 
+func (c *UserController) GetUserByMobile(mobile string) (user *databases.Users, err error) {
+	user = &databases.Users{
+		Mobile: mobile,
+	}
+	err = user.FetchByMobile(c.db)
+	if err != nil {
+		if sqlx.DBErr(err).IsNotFound() {
+			err = errors.UserNotFound.StatusError().WithMsg("根据手机号没有找到用户，请核对手机号码")
+			return
+		}
+		return nil, err
+	}
+
+	return
+}
+
 func (c *UserController) GetUserByBindID(typ enums.BindType, bindID string) (user *databases.Users, err error) {
 	bind := databases.UserBinds{
 		Type:   typ,
@@ -42,8 +58,14 @@ func (c *UserController) GetUserByBindID(typ enums.BindType, bindID string) (use
 	return
 }
 
-func (c *UserController) CreateBind(userID uint64, bingID string, bindType enums.BindType) error {
-	return nil
+func (c *UserController) CreateBind(userID uint64, bingID string, bindType enums.BindType) (*databases.UserBinds, error) {
+	bind := &databases.UserBinds{
+		UserID: userID,
+		BindID: bingID,
+		Type:   bindType,
+	}
+	err := bind.Create(c.db)
+	return bind, err
 }
 
 func (c *UserController) CreateUserAndBind(userID uint64, bingID string, bindType enums.BindType, opts ...CreateUserOpt) (*databases.Users, *databases.UserBinds, error) {

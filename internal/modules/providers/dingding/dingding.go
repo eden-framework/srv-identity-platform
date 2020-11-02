@@ -18,7 +18,6 @@ func NewDingDingProvider(config global.DingDingConfig) *DingDing {
 			Client: client.Client{
 				Host: "oapi.dingtalk.com",
 				Mode: "https",
-				Port: 80,
 			},
 			AppKey:         config.AppKey,
 			AppSecret:      config.AppSecret.String(),

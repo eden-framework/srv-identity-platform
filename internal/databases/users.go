@@ -8,6 +8,8 @@ import (
 //go:generate eden generate tag Users --defaults=true
 // @def primary ID
 // @def unique_index U_user_id UserID
+// @def unique_index U_mobile Mobile
+// @def unique_index U_email Email
 type Users struct {
 	datatypes.PrimaryID
 	// 业务ID

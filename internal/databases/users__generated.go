@@ -15,12 +15,28 @@ func (Users) PrimaryKey() []string {
 	}
 }
 
+func (Users) UniqueIndexUEmail() string {
+	return "U_email"
+}
+
+func (Users) UniqueIndexUMobile() string {
+	return "U_mobile"
+}
+
 func (Users) UniqueIndexUUserID() string {
 	return "U_user_id"
 }
 
 func (Users) UniqueIndexes() github_com_eden_framework_sqlx_builder.Indexes {
 	return github_com_eden_framework_sqlx_builder.Indexes{
+		"U_email": []string{
+			"Email",
+			"DeletedAt",
+		},
+		"U_mobile": []string{
+			"Mobile",
+			"DeletedAt",
+		},
 		"U_user_id": []string{
 			"UserID",
 			"DeletedAt",
@@ -169,7 +185,9 @@ func (Users) ColRelations() map[string][]string {
 
 func (m *Users) IndexFieldNames() []string {
 	return []string{
+		"Email",
 		"ID",
+		"Mobile",
 		"UserID",
 	}
 }
@@ -554,6 +572,260 @@ func (m *Users) SoftDeleteByUserID(db github_com_eden_framework_sqlx.DBExecutor)
 
 }
 
+func (m *Users) FetchByMobile(db github_com_eden_framework_sqlx.DBExecutor) error {
+
+	table := db.T(m)
+
+	err := db.QueryExprAndScan(
+		github_com_eden_framework_sqlx_builder.Select(nil).
+			From(
+				db.T(m),
+				github_com_eden_framework_sqlx_builder.Where(github_com_eden_framework_sqlx_builder.And(
+					table.F("Mobile").Eq(m.Mobile),
+					table.F("DeletedAt").Eq(m.DeletedAt),
+				)),
+				github_com_eden_framework_sqlx_builder.Comment("Users.FetchByMobile"),
+			),
+		m,
+	)
+
+	return err
+}
+
+func (m *Users) UpdateByMobileWithMap(db github_com_eden_framework_sqlx.DBExecutor, fieldValues github_com_eden_framework_sqlx_builder.FieldValues) error {
+
+	if _, ok := fieldValues["UpdatedAt"]; !ok {
+		fieldValues["UpdatedAt"] = github_com_eden_framework_sqlx_datatypes.Timestamp(time.Now())
+	}
+
+	table := db.T(m)
+
+	result, err := db.ExecExpr(
+		github_com_eden_framework_sqlx_builder.Update(db.T(m)).
+			Where(
+				github_com_eden_framework_sqlx_builder.And(
+					table.F("Mobile").Eq(m.Mobile),
+					table.F("DeletedAt").Eq(m.DeletedAt),
+				),
+				github_com_eden_framework_sqlx_builder.Comment("Users.UpdateByMobileWithMap"),
+			).
+			Set(table.AssignmentsByFieldValues(fieldValues)...),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, _ := result.RowsAffected()
+	if rowsAffected == 0 {
+		return m.FetchByMobile(db)
+	}
+
+	return nil
+
+}
+
+func (m *Users) UpdateByMobileWithStruct(db github_com_eden_framework_sqlx.DBExecutor, zeroFields ...string) error {
+
+	fieldValues := github_com_eden_framework_sqlx_builder.FieldValuesFromStructByNonZero(m, zeroFields...)
+	return m.UpdateByMobileWithMap(db, fieldValues)
+
+}
+
+func (m *Users) FetchByMobileForUpdate(db github_com_eden_framework_sqlx.DBExecutor) error {
+
+	table := db.T(m)
+
+	err := db.QueryExprAndScan(
+		github_com_eden_framework_sqlx_builder.Select(nil).
+			From(
+				db.T(m),
+				github_com_eden_framework_sqlx_builder.Where(github_com_eden_framework_sqlx_builder.And(
+					table.F("Mobile").Eq(m.Mobile),
+					table.F("DeletedAt").Eq(m.DeletedAt),
+				)),
+				github_com_eden_framework_sqlx_builder.ForUpdate(),
+				github_com_eden_framework_sqlx_builder.Comment("Users.FetchByMobileForUpdate"),
+			),
+		m,
+	)
+
+	return err
+}
+
+func (m *Users) DeleteByMobile(db github_com_eden_framework_sqlx.DBExecutor) error {
+
+	table := db.T(m)
+
+	_, err := db.ExecExpr(
+		github_com_eden_framework_sqlx_builder.Delete().
+			From(db.T(m),
+				github_com_eden_framework_sqlx_builder.Where(github_com_eden_framework_sqlx_builder.And(
+					table.F("Mobile").Eq(m.Mobile),
+					table.F("DeletedAt").Eq(m.DeletedAt),
+				)),
+				github_com_eden_framework_sqlx_builder.Comment("Users.DeleteByMobile"),
+			))
+
+	return err
+}
+
+func (m *Users) SoftDeleteByMobile(db github_com_eden_framework_sqlx.DBExecutor) error {
+
+	table := db.T(m)
+
+	fieldValues := github_com_eden_framework_sqlx_builder.FieldValues{}
+	if _, ok := fieldValues["DeletedAt"]; !ok {
+		fieldValues["DeletedAt"] = github_com_eden_framework_sqlx_datatypes.Timestamp(time.Now())
+	}
+
+	if _, ok := fieldValues["UpdatedAt"]; !ok {
+		fieldValues["UpdatedAt"] = github_com_eden_framework_sqlx_datatypes.Timestamp(time.Now())
+	}
+
+	_, err := db.ExecExpr(
+		github_com_eden_framework_sqlx_builder.Update(db.T(m)).
+			Where(
+				github_com_eden_framework_sqlx_builder.And(
+					table.F("Mobile").Eq(m.Mobile),
+					table.F("DeletedAt").Eq(m.DeletedAt),
+				),
+				github_com_eden_framework_sqlx_builder.Comment("Users.SoftDeleteByMobile"),
+			).
+			Set(table.AssignmentsByFieldValues(fieldValues)...),
+	)
+
+	return err
+
+}
+
+func (m *Users) FetchByEmail(db github_com_eden_framework_sqlx.DBExecutor) error {
+
+	table := db.T(m)
+
+	err := db.QueryExprAndScan(
+		github_com_eden_framework_sqlx_builder.Select(nil).
+			From(
+				db.T(m),
+				github_com_eden_framework_sqlx_builder.Where(github_com_eden_framework_sqlx_builder.And(
+					table.F("Email").Eq(m.Email),
+					table.F("DeletedAt").Eq(m.DeletedAt),
+				)),
+				github_com_eden_framework_sqlx_builder.Comment("Users.FetchByEmail"),
+			),
+		m,
+	)
+
+	return err
+}
+
+func (m *Users) UpdateByEmailWithMap(db github_com_eden_framework_sqlx.DBExecutor, fieldValues github_com_eden_framework_sqlx_builder.FieldValues) error {
+
+	if _, ok := fieldValues["UpdatedAt"]; !ok {
+		fieldValues["UpdatedAt"] = github_com_eden_framework_sqlx_datatypes.Timestamp(time.Now())
+	}
+
+	table := db.T(m)
+
+	result, err := db.ExecExpr(
+		github_com_eden_framework_sqlx_builder.Update(db.T(m)).
+			Where(
+				github_com_eden_framework_sqlx_builder.And(
+					table.F("Email").Eq(m.Email),
+					table.F("DeletedAt").Eq(m.DeletedAt),
+				),
+				github_com_eden_framework_sqlx_builder.Comment("Users.UpdateByEmailWithMap"),
+			).
+			Set(table.AssignmentsByFieldValues(fieldValues)...),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, _ := result.RowsAffected()
+	if rowsAffected == 0 {
+		return m.FetchByEmail(db)
+	}
+
+	return nil
+
+}
+
+func (m *Users) UpdateByEmailWithStruct(db github_com_eden_framework_sqlx.DBExecutor, zeroFields ...string) error {
+
+	fieldValues := github_com_eden_framework_sqlx_builder.FieldValuesFromStructByNonZero(m, zeroFields...)
+	return m.UpdateByEmailWithMap(db, fieldValues)
+
+}
+
+func (m *Users) FetchByEmailForUpdate(db github_com_eden_framework_sqlx.DBExecutor) error {
+
+	table := db.T(m)
+
+	err := db.QueryExprAndScan(
+		github_com_eden_framework_sqlx_builder.Select(nil).
+			From(
+				db.T(m),
+				github_com_eden_framework_sqlx_builder.Where(github_com_eden_framework_sqlx_builder.And(
+					table.F("Email").Eq(m.Email),
+					table.F("DeletedAt").Eq(m.DeletedAt),
+				)),
+				github_com_eden_framework_sqlx_builder.ForUpdate(),
+				github_com_eden_framework_sqlx_builder.Comment("Users.FetchByEmailForUpdate"),
+			),
+		m,
+	)
+
+	return err
+}
+
+func (m *Users) DeleteByEmail(db github_com_eden_framework_sqlx.DBExecutor) error {
+
+	table := db.T(m)
+
+	_, err := db.ExecExpr(
+		github_com_eden_framework_sqlx_builder.Delete().
+			From(db.T(m),
+				github_com_eden_framework_sqlx_builder.Where(github_com_eden_framework_sqlx_builder.And(
+					table.F("Email").Eq(m.Email),
+					table.F("DeletedAt").Eq(m.DeletedAt),
+				)),
+				github_com_eden_framework_sqlx_builder.Comment("Users.DeleteByEmail"),
+			))
+
+	return err
+}
+
+func (m *Users) SoftDeleteByEmail(db github_com_eden_framework_sqlx.DBExecutor) error {
+
+	table := db.T(m)
+
+	fieldValues := github_com_eden_framework_sqlx_builder.FieldValues{}
+	if _, ok := fieldValues["DeletedAt"]; !ok {
+		fieldValues["DeletedAt"] = github_com_eden_framework_sqlx_datatypes.Timestamp(time.Now())
+	}
+
+	if _, ok := fieldValues["UpdatedAt"]; !ok {
+		fieldValues["UpdatedAt"] = github_com_eden_framework_sqlx_datatypes.Timestamp(time.Now())
+	}
+
+	_, err := db.ExecExpr(
+		github_com_eden_framework_sqlx_builder.Update(db.T(m)).
+			Where(
+				github_com_eden_framework_sqlx_builder.And(
+					table.F("Email").Eq(m.Email),
+					table.F("DeletedAt").Eq(m.DeletedAt),
+				),
+				github_com_eden_framework_sqlx_builder.Comment("Users.SoftDeleteByEmail"),
+			).
+			Set(table.AssignmentsByFieldValues(fieldValues)...),
+	)
+
+	return err
+
+}
+
 func (m *Users) List(db github_com_eden_framework_sqlx.DBExecutor, condition github_com_eden_framework_sqlx_builder.SqlCondition, additions ...github_com_eden_framework_sqlx_builder.Addition) ([]Users, error) {
 
 	list := make([]Users, 0)
@@ -612,6 +884,20 @@ func (m *Users) Count(db github_com_eden_framework_sqlx.DBExecutor, condition gi
 
 }
 
+func (m *Users) BatchFetchByEmailList(db github_com_eden_framework_sqlx.DBExecutor, values []string) ([]Users, error) {
+
+	if len(values) == 0 {
+		return nil, nil
+	}
+
+	table := db.T(m)
+
+	condition := table.F("Email").In(values)
+
+	return m.List(db, condition)
+
+}
+
 func (m *Users) BatchFetchByIDList(db github_com_eden_framework_sqlx.DBExecutor, values []uint64) ([]Users, error) {
 
 	if len(values) == 0 {
@@ -621,6 +907,20 @@ func (m *Users) BatchFetchByIDList(db github_com_eden_framework_sqlx.DBExecutor,
 	table := db.T(m)
 
 	condition := table.F("ID").In(values)
+
+	return m.List(db, condition)
+
+}
+
+func (m *Users) BatchFetchByMobileList(db github_com_eden_framework_sqlx.DBExecutor, values []string) ([]Users, error) {
+
+	if len(values) == 0 {
+		return nil, nil
+	}
+
+	table := db.T(m)
+
+	condition := table.F("Mobile").In(values)
 
 	return m.List(db, condition)
 

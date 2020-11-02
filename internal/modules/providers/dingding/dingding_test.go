@@ -11,7 +11,6 @@ func TestName(t *testing.T) {
 		Client: client.Client{
 			Host: "oapi.dingtalk.com",
 			Mode: "https",
-			Port: 80,
 		},
 
 		AppKey:    "dingtn1euhifut1f3pgt",
@@ -47,4 +46,4 @@ func TestName(t *testing.T) {
 	t.Log(user)
 }
 
-//https://oapi.dingtalk.com/connect/qrconnect?appid=dingoaylmyjg0jnbuvbwwh&response_type=code&scope=snsapi_login&redirect_uri=http://localhost:8802/identity-platform/v0/auth/callback
+//https://oapi.dingtalk.com/connect/qrconnect?appid=dingoaylmyjg0jnbuvbwwh&response_type=code&scope=snsapi_login&state=DINGDING_1234567890&redirect_uri=http://localhost:8802/identity-platform/v0/auth/callback

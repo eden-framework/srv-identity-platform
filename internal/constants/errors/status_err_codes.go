@@ -19,6 +19,8 @@ const (
 	NotFound status_error.StatusErrorCode = http.StatusNotFound*1e6 + ServiceStatusErrorCode + iota
 	// @errTalk 未绑定平台账户
 	UserBindNotFound
+	// @errTalk 用户未找到
+	UserNotFound
 )
 
 const (

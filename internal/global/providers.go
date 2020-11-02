@@ -9,6 +9,12 @@ type DingDingConfig struct {
 	LoginAppSecret envconfig.Password
 }
 
+type EWechatConfig struct {
+	CorpID     string
+	CorpSecret envconfig.Password
+}
+
 var ProviderConfig = struct {
 	DingDing DingDingConfig
+	EWechat  EWechatConfig
 }{}
