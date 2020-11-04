@@ -2,13 +2,13 @@ package v0
 
 import (
 	"github.com/eden-framework/courier"
-	"github.com/eden-framework/srv-identity-platform/internal/routers/v0/auth"
+	"github.com/eden-framework/srv-identity-platform/internal/routers/v0/providers"
 )
 
 var Router = courier.NewRouter(V0Router{})
 
 func init() {
-	Router.Register(auth.Router)
+	Router.Register(providers.Router)
 }
 
 type V0Router struct {
