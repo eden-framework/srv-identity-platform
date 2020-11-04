@@ -42,7 +42,7 @@ func (d EWechat) ProviderIcon() string {
 }
 
 func (d EWechat) ProviderEntry() string {
-	return fmt.Sprintf("https://open.work.weixin.qq.com/wwopen/sso/qrConnect?appid=%s&agentid=%s&state=EWECHAT_{{RANDOM_NUMBER}}&redirect_uri={{REDIRECT_URI}}", global.ProviderConfig.EWechat.CorpID, global.ProviderConfig.EWechat.AgentID)
+	return fmt.Sprintf("https://open.work.weixin.qq.com/wwopen/sso/qrConnect?appid=%s&agentid=%s&state=%s_{{RANDOM_NUMBER}}&redirect_uri={{REDIRECT_URI}}", global.ProviderConfig.EWechat.CorpID, global.ProviderConfig.EWechat.AgentID, d.ProviderID().String())
 }
 
 func (d *EWechat) GetUserID(token string) (string, error) {

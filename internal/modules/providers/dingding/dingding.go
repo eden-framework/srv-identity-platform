@@ -43,7 +43,7 @@ func (d DingDing) ProviderIcon() string {
 }
 
 func (d DingDing) ProviderEntry() string {
-	return fmt.Sprintf("https://oapi.dingtalk.com/connect/qrconnect?appid=%s&response_type=code&scope=snsapi_login&state=DINGDING_{{RANDOM_NUMBER}}&redirect_uri={{REDIRECT_URI}}", global.ProviderConfig.DingDing.LoginAppID)
+	return fmt.Sprintf("https://oapi.dingtalk.com/connect/qrconnect?appid=%s&response_type=code&scope=snsapi_login&state=%s_{{RANDOM_NUMBER}}&redirect_uri={{REDIRECT_URI}}", global.ProviderConfig.DingDing.LoginAppID, d.ProviderID().String())
 }
 
 func (d *DingDing) GetUserID(token string) (string, error) {

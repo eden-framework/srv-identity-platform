@@ -16,11 +16,11 @@ import (
 )
 
 func init() {
-	Router.Register(courier.NewRouter(Callback{}))
+	Router.Register(courier.NewRouter(CallbackCheck{}))
 }
 
-// 第三方回调
-type Callback struct {
+// 第三方回调验证
+type CallbackCheck struct {
 	httpx.MethodGet
 	// Code
 	Code string `name:"code" in:"query" default:""`
@@ -28,11 +28,11 @@ type Callback struct {
 	State string `name:"state" in:"query"`
 }
 
-func (req Callback) Path() string {
+func (req CallbackCheck) Path() string {
 	return "/callback"
 }
 
-func (req Callback) Output(ctx context.Context) (result interface{}, err error) {
+func (req CallbackCheck) Output(ctx context.Context) (result interface{}, err error) {
 	if req.Code == "" {
 		// 用户取消授权，跳转至登录前的页面，现在临时报错
 		err = errors.Unauthorized
