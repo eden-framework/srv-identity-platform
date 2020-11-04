@@ -9,30 +9,37 @@ import (
 	"github.com/eden-framework/srv-identity-platform/internal/constants/errors"
 	"github.com/eden-framework/srv-identity-platform/internal/databases"
 	"github.com/eden-framework/srv-identity-platform/internal/global"
+	"github.com/eden-framework/srv-identity-platform/internal/modules/common"
 	"github.com/eden-framework/srv-identity-platform/internal/modules/providers"
-	"github.com/eden-framework/srv-identity-platform/internal/modules/providers/common"
+	"github.com/eden-framework/srv-identity-platform/internal/modules/token"
 	"github.com/eden-framework/srv-identity-platform/internal/modules/users"
+	"net/url"
 	"strings"
 )
 
 func init() {
-	Router.Register(courier.NewRouter(CallbackCheck{}))
+	Router.Register(courier.NewRouter(Callback{}))
 }
 
 // 第三方回调验证
-type CallbackCheck struct {
+type Callback struct {
 	httpx.MethodGet
-	// Code
+	// Code for provider verify
 	Code string `name:"code" in:"query" default:""`
-	// state
+	// State for provider verify
 	State string `name:"state" in:"query"`
+
+	// ClientID for inner verify
+	ClientID uint64 `name:"clientID,string" in:"query"`
+	// RedirectURI for inner verify
+	RedirectURI string `name:"redirectURI" in:"query"`
 }
 
-func (req CallbackCheck) Path() string {
+func (req Callback) Path() string {
 	return "/callback"
 }
 
-func (req CallbackCheck) Output(ctx context.Context) (result interface{}, err error) {
+func (req Callback) Output(ctx context.Context) (result interface{}, err error) {
 	if req.Code == "" {
 		// 用户取消授权，跳转至登录前的页面，现在临时报错
 		err = errors.Unauthorized
@@ -57,11 +64,11 @@ func (req CallbackCheck) Output(ctx context.Context) (result interface{}, err er
 	}
 	userID, err := provider.GetUserID(req.Code)
 
-	c := users.NewUserController(global.Config.SlaveDB.Get())
+	c := users.NewController(global.Config.SlaveDB.Get())
 	user, err := c.GetUserByBindID(providerType, userID)
 	if err != nil {
 		if err == errors.UserBindNotFound {
-			// TODO 绑定不存在，跳转登录界面，若已登录则跳转绑定界面，现在临时做法是直接创建或绑定用户
+			// 绑定不存在，直接创建并绑定用户
 			userInfo, err := provider.GetUserInfo(userID)
 			if err != nil {
 				err = errors.InternalError.StatusError().WithDesc(err.Error())
@@ -78,11 +85,24 @@ func (req CallbackCheck) Output(ctx context.Context) (result interface{}, err er
 		}
 	}
 
-	// 生成登录凭证，并回调
-	return user, nil
+	// 生成登录凭证
+	code, err := token.Manager.GenerateSecureCode(ctx, user, req.ClientID)
+	if err != nil {
+		return
+	}
+
+	uri, err := url.ParseRequestURI(req.RedirectURI)
+	if err != nil {
+		return
+	}
+
+	query := uri.Query()
+	query.Add("code", code.Code)
+	uri.RawQuery = query.Encode()
+	return httpx.RedirectWithStatusFound(uri.String()), nil
 }
 
-func createUserOrBind(userInfo common.UserInfo, typ enums.BindType, controller *users.UserController) (*databases.Users, *databases.UserBinds, error) {
+func createUserOrBind(userInfo common.UserInfo, typ enums.BindType, controller *users.Controller) (*databases.Users, *databases.UserBinds, error) {
 	// 通过手机号查询用户是否存在，若已存在则直接绑定
 	if userInfo.Mobile != "" {
 		user, err := controller.GetUserByMobile(userInfo.Mobile)

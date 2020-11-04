@@ -4,7 +4,9 @@ import (
 	"github.com/eden-framework/courier/transport_grpc"
 	"github.com/eden-framework/courier/transport_http"
 	"github.com/eden-framework/eden-framework/pkg/client/mysql"
+	"github.com/profzone/envconfig"
 	"github.com/sirupsen/logrus"
+	"time"
 
 	"github.com/eden-framework/srv-identity-platform/internal/databases"
 )
@@ -21,7 +23,8 @@ var Config = struct {
 	HTTPServer *transport_http.ServeHTTP
 
 	// service config
-	EnableRegistry bool
+	EnableRegister          bool
+	SecureCodeDefaultExpire envconfig.Duration
 }{
 	LogLevel: logrus.DebugLevel,
 
@@ -36,5 +39,6 @@ var Config = struct {
 		WithCORS: true,
 	},
 
-	EnableRegistry: true,
+	EnableRegister:          true,
+	SecureCodeDefaultExpire: envconfig.Duration(time.Minute),
 }

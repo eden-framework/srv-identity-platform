@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/eden-framework/srv-identity-platform/internal/constants/enums"
 	"github.com/eden-framework/srv-identity-platform/internal/global"
-	"github.com/eden-framework/srv-identity-platform/internal/modules/providers/common"
+	"github.com/eden-framework/srv-identity-platform/internal/modules/common"
 	"github.com/eden-framework/srv-identity-platform/internal/modules/providers/dingding"
 	"github.com/eden-framework/srv-identity-platform/internal/modules/providers/ewechat"
 )

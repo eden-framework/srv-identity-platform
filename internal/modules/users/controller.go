@@ -7,17 +7,17 @@ import (
 	"github.com/eden-framework/srv-identity-platform/internal/databases"
 )
 
-type UserController struct {
+type Controller struct {
 	db sqlx.DBExecutor
 }
 
-func NewUserController(db sqlx.DBExecutor) *UserController {
-	return &UserController{
+func NewController(db sqlx.DBExecutor) *Controller {
+	return &Controller{
 		db: db,
 	}
 }
 
-func (c *UserController) GetUserByMobile(mobile string) (user *databases.Users, err error) {
+func (c *Controller) GetUserByMobile(mobile string) (user *databases.Users, err error) {
 	user = &databases.Users{
 		Mobile: mobile,
 	}
@@ -33,7 +33,7 @@ func (c *UserController) GetUserByMobile(mobile string) (user *databases.Users, 
 	return
 }
 
-func (c *UserController) GetUserByBindID(typ enums.BindType, bindID string) (user *databases.Users, err error) {
+func (c *Controller) GetUserByBindID(typ enums.BindType, bindID string) (user *databases.Users, err error) {
 	bind := databases.UserBinds{
 		Type:   typ,
 		BindID: bindID,
@@ -58,7 +58,7 @@ func (c *UserController) GetUserByBindID(typ enums.BindType, bindID string) (use
 	return
 }
 
-func (c *UserController) CreateBind(userID uint64, bingID string, bindType enums.BindType) (*databases.UserBinds, error) {
+func (c *Controller) CreateBind(userID uint64, bingID string, bindType enums.BindType) (*databases.UserBinds, error) {
 	bind := &databases.UserBinds{
 		UserID: userID,
 		BindID: bingID,
@@ -68,7 +68,7 @@ func (c *UserController) CreateBind(userID uint64, bingID string, bindType enums
 	return bind, err
 }
 
-func (c *UserController) CreateUserAndBind(userID uint64, bingID string, bindType enums.BindType, opts ...CreateUserOpt) (*databases.Users, *databases.UserBinds, error) {
+func (c *Controller) CreateUserAndBind(userID uint64, bingID string, bindType enums.BindType, opts ...CreateUserOpt) (*databases.Users, *databases.UserBinds, error) {
 	tx := sqlx.NewTasks(c.db)
 	user := &databases.Users{}
 	for _, opt := range opts {

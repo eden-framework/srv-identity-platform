@@ -4,7 +4,7 @@ import "github.com/eden-framework/srv-identity-platform/internal/databases"
 
 type CreateUserOpt func(model *databases.Users)
 
-func (c *UserController) CreateUser(opts ...CreateUserOpt) error {
+func (c *Controller) CreateUser(opts ...CreateUserOpt) error {
 	user := &databases.Users{}
 	for _, opt := range opts {
 		opt(user)

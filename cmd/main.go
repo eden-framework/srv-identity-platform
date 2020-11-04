@@ -5,6 +5,7 @@ import (
 	"github.com/eden-framework/eden-framework/pkg/application"
 	"github.com/eden-framework/sqlx/migration"
 	"github.com/eden-framework/srv-identity-platform/internal/modules/providers"
+	"github.com/eden-framework/srv-identity-platform/internal/modules/token"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 
@@ -21,8 +22,9 @@ func main() {
 		application.WithApollo(&global.ApolloConfig),
 		application.WithConfig(&global.ClientConfig),
 		application.WithConfig(&databases.Config),
+		application.WithConfig(&global.CacheConfig),
 		application.WithConfig(&global.ProviderConfig),
-		application.WithInitializer(true, providers.Initializer))
+		application.WithInitializer(true, providers.Initializer, token.Initializer))
 
 	cmdMigrate := &cobra.Command{
 		Use: "migrate",
