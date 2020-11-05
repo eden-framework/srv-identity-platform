@@ -13,7 +13,6 @@ import (
 	"github.com/eden-framework/srv-identity-platform/internal/modules/providers"
 	"github.com/eden-framework/srv-identity-platform/internal/modules/token"
 	"github.com/eden-framework/srv-identity-platform/internal/modules/users"
-	"net/url"
 	"strings"
 )
 
@@ -24,14 +23,13 @@ func init() {
 // 第三方回调验证
 type Callback struct {
 	httpx.MethodGet
-	// Code for provider verify
+	// Code
 	Code string `name:"code" in:"query" default:""`
-	// State for provider verify
+	// State
 	State string `name:"state" in:"query"`
-
-	// ClientID for inner verify
+	// ClientID
 	ClientID uint64 `name:"clientID,string" in:"query"`
-	// RedirectURI for inner verify
+	// RedirectURI
 	RedirectURI string `name:"redirectURI" in:"query"`
 }
 
@@ -63,6 +61,9 @@ func (req Callback) Output(ctx context.Context) (result interface{}, err error) 
 		err = errors.InternalError.StatusError().WithDesc("dingding provider not found")
 	}
 	userID, err := provider.GetUserID(req.Code)
+	if err != nil {
+		return
+	}
 
 	c := users.NewController(global.Config.SlaveDB.Get())
 	user, err := c.GetUserByBindID(providerType, userID)
@@ -91,15 +92,7 @@ func (req Callback) Output(ctx context.Context) (result interface{}, err error) 
 		return
 	}
 
-	uri, err := url.ParseRequestURI(req.RedirectURI)
-	if err != nil {
-		return
-	}
-
-	query := uri.Query()
-	query.Add("code", code.Code)
-	uri.RawQuery = query.Encode()
-	return httpx.RedirectWithStatusFound(uri.String()), nil
+	return code, nil
 }
 
 func createUserOrBind(userInfo common.UserInfo, typ enums.BindType, controller *users.Controller) (*databases.Users, *databases.UserBinds, error) {

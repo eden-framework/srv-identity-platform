@@ -5,6 +5,7 @@ go 1.14
 replace k8s.io/client-go => k8s.io/client-go v0.18.8
 
 require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/eden-framework/apollo v0.0.1
 	github.com/eden-framework/client v0.0.0-20201022095936-63753150b326
 	github.com/eden-framework/context v0.0.2

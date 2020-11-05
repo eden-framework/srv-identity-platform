@@ -23,8 +23,12 @@ var Config = struct {
 	HTTPServer *transport_http.ServeHTTP
 
 	// service config
-	EnableRegister          bool
-	SecureCodeDefaultExpire envconfig.Duration
+	EnableRegister           bool
+	SecureCodeDefaultExpire  envconfig.Duration
+	AccessTokenDefaultExpire envconfig.Duration
+
+	JwtIssuer     string
+	JwtPrivateKey envconfig.Password
 }{
 	LogLevel: logrus.DebugLevel,
 
@@ -39,6 +43,10 @@ var Config = struct {
 		WithCORS: true,
 	},
 
-	EnableRegister:          true,
-	SecureCodeDefaultExpire: envconfig.Duration(time.Minute),
+	EnableRegister:           true,
+	SecureCodeDefaultExpire:  envconfig.Duration(time.Minute),
+	AccessTokenDefaultExpire: envconfig.Duration(2 * time.Hour),
+
+	JwtIssuer:     "",
+	JwtPrivateKey: "",
 }
