@@ -92,7 +92,12 @@ func (req Callback) Output(ctx context.Context) (result interface{}, err error) 
 		return
 	}
 
-	return code, nil
+	accessToken, err := token.Manager.ExchangeAccessToken(ctx, enums.TOKEN_SUBJECT__USER, code.Code)
+	if err != nil {
+		return nil, err
+	}
+
+	return accessToken, nil
 }
 
 func createUserOrBind(userInfo common.UserInfo, typ enums.BindType, controller *users.Controller) (*databases.Users, *databases.UserBinds, error) {

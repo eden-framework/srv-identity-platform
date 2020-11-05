@@ -6,6 +6,7 @@ import (
 	"github.com/eden-framework/client/client_srv_id"
 	"github.com/eden-framework/plugin-cache/cache"
 	"github.com/eden-framework/sqlx"
+	"github.com/eden-framework/srv-identity-platform/internal/constants/enums"
 	"github.com/eden-framework/srv-identity-platform/internal/constants/errors"
 	"github.com/eden-framework/srv-identity-platform/internal/databases"
 	"github.com/eden-framework/srv-identity-platform/internal/global"
@@ -49,7 +50,7 @@ func (c *controller) GenerateSecureCode(ctx context.Context, user *databases.Use
 	return code, nil
 }
 
-func (c *controller) ExchangeAccessToken(ctx context.Context, code string) (token AccessToken, err error) {
+func (c *controller) ExchangeAccessToken(ctx context.Context, subject enums.TokenSubject, code string) (token AccessToken, err error) {
 	state, err := c.codeManager.ExchangeSecureCode(ctx, code)
 	if err != nil {
 		err = errors.InternalError.StatusError().WithDesc(err.Error())
@@ -68,7 +69,7 @@ func (c *controller) ExchangeAccessToken(ctx context.Context, code string) (toke
 		return
 	}
 
-	token, err = c.tokenManger.ExchangeAccessToken(states[0])
+	token, err = c.tokenManger.ExchangeAccessToken(subject, states[0])
 	if err != nil {
 		err = errors.InternalError.StatusError().WithDesc(err.Error())
 		return

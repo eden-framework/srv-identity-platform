@@ -29,8 +29,8 @@ func newTokenManager(issuer string, db sqlx.DBExecutor, clientID client_srv_id.C
 	}
 }
 
-func (m *tokenManager) ExchangeAccessToken(audience string) (token AccessToken, err error) {
-	accessToken, err := m.NewSignedToken(enums.TOKEN_SUBJECT__USER, audience, m.defaultExpireIn)
+func (m *tokenManager) ExchangeAccessToken(subject enums.TokenSubject, audience string) (token AccessToken, err error) {
+	accessToken, err := m.NewSignedToken(subject, audience, m.defaultExpireIn)
 	if err != nil {
 		return
 	}

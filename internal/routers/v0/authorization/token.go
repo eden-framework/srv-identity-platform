@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/eden-framework/courier"
 	"github.com/eden-framework/courier/httpx"
+	"github.com/eden-framework/srv-identity-platform/internal/constants/enums"
 	"github.com/eden-framework/srv-identity-platform/internal/modules/token"
 )
 
@@ -23,6 +24,6 @@ func (req ExchangeToken) Path() string {
 }
 
 func (req ExchangeToken) Output(ctx context.Context) (result interface{}, err error) {
-	result, err = token.Manager.ExchangeAccessToken(ctx, req.Code)
+	result, err = token.Manager.ExchangeAccessToken(ctx, enums.TOKEN_SUBJECT__CLIENT, req.Code)
 	return
 }
