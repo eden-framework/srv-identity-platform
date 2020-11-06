@@ -24,13 +24,13 @@ func init() {
 type Callback struct {
 	httpx.MethodGet
 	// Code
-	Code string `name:"code" in:"query" default:""`
+	Code string `name:"code" in:"query"`
 	// State
 	State string `name:"state" in:"query"`
 	// ClientID
-	ClientID uint64 `name:"clientID,string" in:"query"`
+	ClientID uint64 `name:"clientID,string" in:"query" default:""`
 	// RedirectURI
-	RedirectURI string `name:"redirectURI" in:"query"`
+	RedirectURI string `name:"redirectURI" in:"query" default:""`
 }
 
 func (req Callback) Path() string {
