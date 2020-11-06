@@ -1,11 +1,13 @@
 package token
 
 import (
+	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/eden-framework/client"
 	"github.com/eden-framework/client/client_srv_id"
 	"github.com/eden-framework/sqlx"
 	"github.com/eden-framework/srv-identity-platform/internal/constants/enums"
+	"github.com/eden-framework/srv-identity-platform/internal/constants/errors"
 	"github.com/eden-framework/srv-identity-platform/internal/databases"
 	"github.com/profzone/envconfig"
 	"time"
@@ -75,4 +77,50 @@ func (m *tokenManager) NewSignedToken(subject enums.TokenSubject, audience strin
 	token.Signed = signed
 
 	return
+}
+
+func (m tokenManager) ValidateToken(token string) (*databases.Token, error) {
+	tok, err := m.ParseSignedToken(token)
+	if err != nil {
+		return nil, errors.InternalError.StatusError().WithDesc(err.Error())
+	}
+
+	if tok.Issuer != m.issuer {
+		return nil, errors.InvalidToken
+	}
+
+	if time.Until(time.Time(tok.ExpireAt)) < 0 {
+		return nil, errors.TokenExpired
+	}
+
+	return tok, nil
+}
+
+func (m *tokenManager) ParseSignedToken(token string) (*databases.Token, error) {
+	t, err := jwt.ParseWithClaims(token, NewClaimsWithClockDrift(5), func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return &m.privateKey.PrivateKey().PublicKey, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return databases.ParseTokenFromStandardClaims(t.Claims.(*ClaimsWithClockDrift).StandardClaims)
+}
+
+func NewClaimsWithClockDrift(second int64) *ClaimsWithClockDrift {
+	return &ClaimsWithClockDrift{drift: second, StandardClaims: &jwt.StandardClaims{}}
+}
+
+type ClaimsWithClockDrift struct {
+	drift int64
+	*jwt.StandardClaims
+}
+
+func (c *ClaimsWithClockDrift) Valid() error {
+	c.StandardClaims.IssuedAt -= c.drift
+	valid := c.StandardClaims.Valid()
+	c.StandardClaims.IssuedAt += c.drift
+	return valid
 }

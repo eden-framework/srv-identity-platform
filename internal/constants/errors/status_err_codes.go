@@ -26,6 +26,10 @@ const (
 const (
 	// @errTalk 未授权
 	Unauthorized status_error.StatusErrorCode = http.StatusUnauthorized*1e6 + ServiceStatusErrorCode + iota
+	// @errTalk 无效的访问令牌
+	InvalidToken
+	// @errTalk 访问令牌已过期
+	TokenExpired
 )
 
 const (

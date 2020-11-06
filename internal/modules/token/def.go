@@ -24,9 +24,9 @@ func (s State) MarshalBinary() (data []byte, err error) {
 
 type AccessToken struct {
 	databases.TokenScope
-	AccessToken  string             `json:"access_token"`
-	RefreshToken string             `json:"refresh_token"`
-	ExpireIn     envconfig.Duration `json:"expire_in"`
+	AccessToken  string             `json:"accessToken"`
+	RefreshToken string             `json:"refreshToken"`
+	ExpireIn     envconfig.Duration `json:"expireIn"`
 }
 
 type SignedToken struct {

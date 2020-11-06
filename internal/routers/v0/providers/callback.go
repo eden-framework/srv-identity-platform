@@ -20,7 +20,7 @@ func init() {
 	Router.Register(courier.NewRouter(Callback{}))
 }
 
-// 第三方回调验证
+// 第三方回调验证，并颁发UserAccessToken
 type Callback struct {
 	httpx.MethodGet
 	// Code

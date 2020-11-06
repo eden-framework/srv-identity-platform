@@ -77,3 +77,7 @@ func (c *controller) ExchangeAccessToken(ctx context.Context, subject enums.Toke
 
 	return token, nil
 }
+
+func (c *controller) ValidateToken(token string) (*databases.Token, error) {
+	return c.tokenManger.ValidateToken(token)
+}

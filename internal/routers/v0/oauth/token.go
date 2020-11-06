@@ -1,4 +1,4 @@
-package authorization
+package oauth
 
 import (
 	"context"
@@ -6,13 +6,15 @@ import (
 	"github.com/eden-framework/courier/httpx"
 	"github.com/eden-framework/srv-identity-platform/internal/constants/enums"
 	"github.com/eden-framework/srv-identity-platform/internal/modules/token"
+	"github.com/eden-framework/srv-identity-platform/internal/routers/v0/authorization"
+	"github.com/eden-framework/srv-identity-platform/internal/routers/v0/middleware"
 )
 
 func init() {
-	Router.Register(courier.NewRouter(ExchangeToken{}))
+	authorization.Router.Register(courier.NewRouter(middleware.MustValidAccount{}, ExchangeToken{}))
 }
 
-// 使用SecureCode换取AccessToken
+// 使用SecureCode颁发ClientAccessToken
 type ExchangeToken struct {
 	httpx.MethodGet
 	// Code
