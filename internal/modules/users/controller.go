@@ -5,6 +5,7 @@ import (
 	"github.com/eden-framework/srv-identity-platform/internal/constants/enums"
 	"github.com/eden-framework/srv-identity-platform/internal/constants/errors"
 	"github.com/eden-framework/srv-identity-platform/internal/databases"
+	"github.com/sirupsen/logrus"
 )
 
 type Controller struct {
@@ -17,19 +18,29 @@ func NewController(db sqlx.DBExecutor) *Controller {
 	}
 }
 
+func (c *Controller) GetUserByUserID(userID uint64) (user *databases.Users, err error) {
+	user = &databases.Users{
+		UserID: userID,
+	}
+	err = user.FetchByUserID(c.db)
+	if err != nil {
+		if !sqlx.DBErr(err).IsNotFound() {
+			logrus.Errorf("[user.Controller.GetUserByUserID] err: %v, userID: %d", err, userID)
+		}
+	}
+	return
+}
+
 func (c *Controller) GetUserByMobile(mobile string) (user *databases.Users, err error) {
 	user = &databases.Users{
 		Mobile: mobile,
 	}
 	err = user.FetchByMobile(c.db)
 	if err != nil {
-		if sqlx.DBErr(err).IsNotFound() {
-			err = errors.UserNotFound.StatusError().WithMsg("根据手机号没有找到用户，请核对手机号码")
-			return
+		if !sqlx.DBErr(err).IsNotFound() {
+			logrus.Errorf("[user.Controller.GetUserByUserID] err: %v, mobile: %s", err, mobile)
 		}
-		return nil, err
 	}
-
 	return
 }
 
@@ -52,6 +63,10 @@ func (c *Controller) GetUserByBindID(typ enums.BindType, bindID string) (user *d
 	}
 	err = user.FetchByUserID(c.db)
 	if err != nil {
+		if sqlx.DBErr(err).IsNotFound() {
+			err = errors.UserNotFound.StatusError().WithMsg("根据绑定账号没有找到用户")
+			return
+		}
 		return
 	}
 

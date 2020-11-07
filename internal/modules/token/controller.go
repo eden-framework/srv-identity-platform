@@ -81,3 +81,7 @@ func (c *controller) ExchangeAccessToken(ctx context.Context, subject enums.Toke
 func (c *controller) ValidateToken(token string) (*databases.Token, error) {
 	return c.tokenManger.ValidateToken(token)
 }
+
+func (c *controller) PublicKey() []byte {
+	return c.tokenManger.PublicKey()
+}

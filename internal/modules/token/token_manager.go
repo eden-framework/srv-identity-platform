@@ -109,6 +109,13 @@ func (m *tokenManager) ParseSignedToken(token string) (*databases.Token, error) 
 	return databases.ParseTokenFromStandardClaims(t.Claims.(*ClaimsWithClockDrift).StandardClaims)
 }
 
+func (m *tokenManager) PublicKey() []byte {
+	key := &RSAPrivateKey{
+		PrivateKey: m.privateKey.PrivateKey(),
+	}
+	return key.PublicPEM()
+}
+
 func NewClaimsWithClockDrift(second int64) *ClaimsWithClockDrift {
 	return &ClaimsWithClockDrift{drift: second, StandardClaims: &jwt.StandardClaims{}}
 }

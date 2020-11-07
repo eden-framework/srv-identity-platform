@@ -48,6 +48,7 @@ func (Users) Comments() map[string]string {
 	return map[string]string{
 		"Email":    "邮箱",
 		"Mobile":   "手机号",
+		"Name":     "姓名",
 		"Password": "密码",
 		"Salt":     "盐值",
 		"UserID":   "业务ID",
@@ -83,6 +84,9 @@ func (Users) ColDescriptions() map[string][]string {
 		},
 		"Mobile": []string{
 			"手机号",
+		},
+		"Name": []string{
+			"姓名",
 		},
 		"Password": []string{
 			"密码",
@@ -137,6 +141,14 @@ func (Users) FieldKeySalt() string {
 
 func (m *Users) FieldSalt() *github_com_eden_framework_sqlx_builder.Column {
 	return UsersTable.F(m.FieldKeySalt())
+}
+
+func (Users) FieldKeyName() string {
+	return "Name"
+}
+
+func (m *Users) FieldName() *github_com_eden_framework_sqlx_builder.Column {
+	return UsersTable.F(m.FieldKeyName())
 }
 
 func (Users) FieldKeyMobile() string {

@@ -5,6 +5,7 @@ import (
 	"github.com/eden-framework/client"
 	"github.com/eden-framework/courier"
 	"github.com/eden-framework/courier/httpx"
+	"github.com/eden-framework/sqlx"
 	"github.com/eden-framework/srv-identity-platform/internal/constants/enums"
 	"github.com/eden-framework/srv-identity-platform/internal/constants/errors"
 	"github.com/eden-framework/srv-identity-platform/internal/databases"
@@ -77,9 +78,14 @@ func (req Callback) Output(ctx context.Context) (result interface{}, err error) 
 			}
 			user, _, err = createUserOrBind(userInfo, providerType, c)
 			if err != nil {
+				if err == errors.UserNotFound {
+					return nil, err
+				}
 				err = errors.InternalError.StatusError().WithDesc(err.Error())
 				return nil, err
 			}
+		} else if err == errors.UserNotFound {
+			return
 		} else {
 			err = errors.InternalError.StatusError().WithDesc(err.Error())
 			return
@@ -104,15 +110,18 @@ func createUserOrBind(userInfo common.UserInfo, typ enums.BindType, controller *
 	// 通过手机号查询用户是否存在，若已存在则直接绑定
 	if userInfo.Mobile != "" {
 		user, err := controller.GetUserByMobile(userInfo.Mobile)
-		if err == nil {
-			bind, err := controller.CreateBind(user.UserID, userInfo.UserID, typ)
-			if err != nil {
+		if err != nil {
+			if sqlx.DBErr(err).IsNotFound() {
+				err = errors.UserNotFound.StatusError().WithMsg("根据手机号没有找到用户，请核对手机号码")
 				return nil, nil, err
 			}
-			return user, bind, err
-		} else if err != errors.UserNotFound {
 			return nil, nil, err
 		}
+		bind, err := controller.CreateBind(user.UserID, userInfo.UserID, typ)
+		if err != nil {
+			return nil, nil, err
+		}
+		return user, bind, err
 	}
 
 	// 不存在则创建用户并建立绑定
@@ -122,6 +131,7 @@ func createUserOrBind(userInfo common.UserInfo, typ enums.BindType, controller *
 	}
 
 	return controller.CreateUserAndBind(userID, userInfo.UserID, typ,
+		users.WithName(userInfo.Name),
 		users.WithMobile(userInfo.Mobile),
 		users.WithEmail(userInfo.Email))
 }

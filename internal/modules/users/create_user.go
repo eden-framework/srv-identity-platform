@@ -33,6 +33,12 @@ func WithPassword(password, salt string) CreateUserOpt {
 	}
 }
 
+func WithName(name string) CreateUserOpt {
+	return func(model *databases.Users) {
+		model.Name = name
+	}
+}
+
 func WithMobile(mobile string) CreateUserOpt {
 	return func(model *databases.Users) {
 		model.Mobile = mobile

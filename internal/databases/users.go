@@ -20,6 +20,8 @@ type Users struct {
 	Password string `json:"-" db:"f_password,default=''"`
 	// 盐值
 	Salt string `json:"-" db:"f_salt,default=''"`
+	// 姓名
+	Name string `json:"name" db:"f_name,default=''"`
 	// 手机号
 	Mobile string `json:"mobile" db:"f_mobile,default=''"`
 	// 邮箱
