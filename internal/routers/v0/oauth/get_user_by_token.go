@@ -12,7 +12,7 @@ import (
 )
 
 func init() {
-	Router.Register(courier.NewRouter(middleware.MustValidAccount{}, GetUserByToken{}))
+	Router.Register(courier.NewRouter(GetUserByToken{}))
 }
 
 // 通过Token获取用户信息

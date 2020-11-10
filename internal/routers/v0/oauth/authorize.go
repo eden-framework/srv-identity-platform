@@ -13,7 +13,7 @@ import (
 )
 
 func init() {
-	Router.Register(courier.NewRouter(middleware.MustValidAccount{}, Authorize{}))
+	Router.Register(courier.NewRouter(Authorize{}))
 }
 
 // 第三方登录授权，获取SecureCode

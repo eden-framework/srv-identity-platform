@@ -7,11 +7,10 @@ import (
 	"github.com/eden-framework/srv-identity-platform/internal/constants/enums"
 	"github.com/eden-framework/srv-identity-platform/internal/modules/token"
 	"github.com/eden-framework/srv-identity-platform/internal/routers/v0/authorization"
-	"github.com/eden-framework/srv-identity-platform/internal/routers/v0/middleware"
 )
 
 func init() {
-	authorization.Router.Register(courier.NewRouter(middleware.MustValidAccount{}, ExchangeToken{}))
+	authorization.Router.Register(courier.NewRouter(ExchangeToken{}))
 }
 
 // 使用SecureCode颁发ClientAccessToken
