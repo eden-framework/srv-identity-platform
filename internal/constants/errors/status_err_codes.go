@@ -27,6 +27,10 @@ const (
 	ModuleNotFound
 	// @errTalk 未找到客户端配置
 	ClientNotFound
+	// @errTalk 未找到权限策略
+	PermissionNotFound
+	// @errTalk 未找到权限策略的接口配置
+	PermissionApiNotFound
 )
 
 const (

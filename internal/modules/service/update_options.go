@@ -63,3 +63,18 @@ type ModuleClientUpdateOption struct {
 func (s ModuleClientUpdateOption) ToUpdateFieldValues(zeroFields ...string) builder.FieldValues {
 	return builder.FieldValuesFromStructByNonZero(s, zeroFields...)
 }
+
+type PermissionApiUpdateOption struct {
+	// 名称
+	Name string `json:"name,omitempty"`
+	// 请求标识
+	RequestKey string `json:"requestKey,omitempty"`
+	// 请求路径
+	RequestPath string `json:"requestPath,omitempty"`
+	// 所属权限策略
+	PermissionID uint64 `json:"permissionsID,string,omitempty"`
+}
+
+func (p PermissionApiUpdateOption) ToUpdateFieldValues(zeroFields ...string) builder.FieldValues {
+	return builder.FieldValuesFromStructByNonZero(p, zeroFields...)
+}

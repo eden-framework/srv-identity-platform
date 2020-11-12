@@ -103,6 +103,14 @@ func (m *ModulePermissionApi) FieldApiID() *github_com_eden_framework_sqlx_build
 	return ModulePermissionApiTable.F(m.FieldKeyApiID())
 }
 
+func (ModulePermissionApi) FieldKeyPermissionID() string {
+	return "PermissionID"
+}
+
+func (m *ModulePermissionApi) FieldPermissionID() *github_com_eden_framework_sqlx_builder.Column {
+	return ModulePermissionApiTable.F(m.FieldKeyPermissionID())
+}
+
 func (ModulePermissionApi) FieldKeyName() string {
 	return "Name"
 }
@@ -125,14 +133,6 @@ func (ModulePermissionApi) FieldKeyRequestPath() string {
 
 func (m *ModulePermissionApi) FieldRequestPath() *github_com_eden_framework_sqlx_builder.Column {
 	return ModulePermissionApiTable.F(m.FieldKeyRequestPath())
-}
-
-func (ModulePermissionApi) FieldKeyPermissionID() string {
-	return "PermissionID"
-}
-
-func (m *ModulePermissionApi) FieldPermissionID() *github_com_eden_framework_sqlx_builder.Column {
-	return ModulePermissionApiTable.F(m.FieldKeyPermissionID())
 }
 
 func (ModulePermissionApi) FieldKeyCreatedAt() string {

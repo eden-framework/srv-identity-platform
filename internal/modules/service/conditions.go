@@ -91,3 +91,33 @@ func (c ModuleClientCondition) ToConditions(db sqlx.DBExecutor) builder.SqlCondi
 	var condition = builder.And(t.F(m.FieldKeyModuleID()).Eq(c.ModuleID))
 	return condition
 }
+
+type PermissionApiCondition struct {
+	// 名称
+	Name string `json:"name,omitempty" name:"name,omitempty"`
+	// 请求标识
+	RequestKey string `json:"requestKey,omitempty" name:"requestKey,omitempty"`
+	// 请求路径
+	RequestPath string `json:"requestPath,omitempty" name:"requestPath,omitempty"`
+	// 所属权限策略
+	PermissionID uint64 `json:"permissionsID,string,omitempty" name:"permissionsID,string,omitempty"`
+}
+
+func (c PermissionApiCondition) ToConditions(db sqlx.DBExecutor) builder.SqlCondition {
+	m := &databases.ModulePermissionApi{}
+	t := db.T(m)
+	var condition builder.SqlCondition
+	if c.Name != "" {
+		condition = builder.And(condition, t.F(m.FieldKeyName()).Eq(c.Name))
+	}
+	if c.RequestKey != "" {
+		condition = builder.And(condition, t.F(m.FieldKeyRequestKey()).Eq(c.RequestKey))
+	}
+	if c.RequestPath != "" {
+		condition = builder.And(condition, t.F(m.FieldKeyRequestPath()).Eq(c.RequestPath))
+	}
+	if c.PermissionID != 0 {
+		condition = builder.And(condition, t.F(m.FieldKeyPermissionID()).Eq(c.PermissionID))
+	}
+	return condition
+}

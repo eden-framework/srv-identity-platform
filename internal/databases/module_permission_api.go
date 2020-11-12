@@ -13,6 +13,8 @@ type ModulePermissionApi struct {
 	datatypes.PrimaryID
 	// 业务ID
 	ApiID uint64 `json:"apiID,string" db:"f_module_permission_api_id"`
+	// 所属权限策略
+	PermissionID uint64 `json:"permissionsID,string" db:"f_permissions_id"`
 	BaseApi
 	datatypes.OperateTime
 }
@@ -24,6 +26,4 @@ type BaseApi struct {
 	RequestKey string `json:"requestKey" db:"f_request_key,default=''"`
 	// 请求路径
 	RequestPath string `json:"requestPath" db:"f_request_path,default=''"`
-	// 所属权限策略
-	PermissionID uint64 `json:"permissionsID,string" db:"f_permissions_id"`
 }

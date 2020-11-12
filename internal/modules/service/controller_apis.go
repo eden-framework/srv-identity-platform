@@ -8,14 +8,15 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func (c *Controller) CreateModulePermissionApi(opt databases.BaseApi) (per *databases.ModulePermissionApi, err error) {
+func (c *Controller) CreateModulePermissionApi(permissionID uint64, opt databases.BaseApi) (per *databases.ModulePermissionApi, err error) {
 	id, err := client.GetUniqueID(c.clientID)
 	if err != nil {
 		return
 	}
 	per = &databases.ModulePermissionApi{
-		ApiID:   id,
-		BaseApi: opt,
+		ApiID:        id,
+		PermissionID: permissionID,
+		BaseApi:      opt,
 	}
 	err = per.Create(c.db)
 	if err != nil {
