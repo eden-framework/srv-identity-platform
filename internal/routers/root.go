@@ -4,8 +4,8 @@ import (
 	"github.com/eden-framework/context"
 	"github.com/eden-framework/courier"
 	"github.com/eden-framework/courier/swagger"
+	"github.com/eden-framework/srv-identity-platform/internal/routers/entry"
 	v0 "github.com/eden-framework/srv-identity-platform/internal/routers/v0"
-	v1 "github.com/eden-framework/srv-identity-platform/internal/routers/v1"
 )
 
 var Router = courier.NewRouter(RootRouter{})
@@ -15,7 +15,7 @@ func init() {
 		Router.Register(swagger.SwaggerRouter)
 	}
 	Router.Register(v0.Router)
-	Router.Register(v1.Router)
+	Router.Register(entry.Router)
 }
 
 type RootRouter struct {

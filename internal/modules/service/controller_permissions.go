@@ -14,7 +14,7 @@ func (c *Controller) CreateModulePermission(moduleID uint64, opt databases.BaseP
 		return
 	}
 	per = &databases.ModulePermissions{
-		PermissionsID:  id,
+		PermissionID:   id,
 		ModuleID:       moduleID,
 		BasePermission: opt,
 	}
@@ -27,9 +27,9 @@ func (c *Controller) CreateModulePermission(moduleID uint64, opt databases.BaseP
 
 func (c *Controller) UpdateModulePermission(id uint64, opt UpdateOption, zeroFieldNames ...string) error {
 	m := &databases.ModulePermissions{
-		PermissionsID: id,
+		PermissionID: id,
 	}
-	err := m.FetchByPermissionsID(c.db)
+	err := m.FetchByPermissionID(c.db)
 	if err != nil {
 		if !sqlx.DBErr(err).IsNotFound() {
 			logrus.Errorf("service.Controller.UpdateModulePermission FetchByPermissionsID err: %v, id: %d, opt: %+v", err, id, opt)
@@ -38,7 +38,7 @@ func (c *Controller) UpdateModulePermission(id uint64, opt UpdateOption, zeroFie
 	}
 
 	fieldValues := opt.ToUpdateFieldValues(zeroFieldNames...)
-	err = m.UpdateByPermissionsIDWithMap(c.db, fieldValues)
+	err = m.UpdateByPermissionIDWithMap(c.db, fieldValues)
 	if err != nil {
 		logrus.Errorf("service.Controller.UpdateModulePermission UpdateByPermissionsIDWithMap err: %v, id: %d, opt: %+v, fieldValues: %+v", err, id, opt, fieldValues)
 	}
@@ -63,9 +63,9 @@ func (c *Controller) GetModulePermissions(condition Condition, offset, limit int
 
 func (c *Controller) GetModulePermissionByPermissionID(id uint64) (model *databases.ModulePermissions, err error) {
 	model = &databases.ModulePermissions{
-		PermissionsID: id,
+		PermissionID: id,
 	}
-	err = model.FetchByPermissionsID(c.db)
+	err = model.FetchByPermissionID(c.db)
 	if err != nil && !sqlx.DBErr(err).IsNotFound() {
 		logrus.Errorf("service.Controller.GetModulePermissionByPermissionID err: %v, id: %d", err, id)
 	}
@@ -74,12 +74,12 @@ func (c *Controller) GetModulePermissionByPermissionID(id uint64) (model *databa
 
 func (c *Controller) DeleteModulePermission(id uint64, soft bool) (err error) {
 	model := &databases.ModulePermissions{
-		PermissionsID: id,
+		PermissionID: id,
 	}
 	if soft {
-		err = model.SoftDeleteByPermissionsID(c.db)
+		err = model.SoftDeleteByPermissionID(c.db)
 	} else {
-		err = model.DeleteByPermissionsID(c.db)
+		err = model.DeleteByPermissionID(c.db)
 	}
 	if err != nil {
 		logrus.Errorf("service.Controller.DeleteModulePermission err: %v, id: %d, soft: %v", err, id, soft)

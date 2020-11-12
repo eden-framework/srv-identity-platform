@@ -30,7 +30,7 @@ func (ModulePermissions) UniqueIndexUPermissionsID() string {
 func (ModulePermissions) UniqueIndexes() github_com_eden_framework_sqlx_builder.Indexes {
 	return github_com_eden_framework_sqlx_builder.Indexes{
 		"U_permissions_id": []string{
-			"PermissionsID",
+			"PermissionID",
 			"DeletedAt",
 		},
 	}
@@ -40,8 +40,8 @@ func (ModulePermissions) Comments() map[string]string {
 	return map[string]string{
 		"ModuleID":      "所属模块",
 		"Name":          "权限策略名称",
+		"PermissionID":  "业务ID",
 		"PermissionKey": "权限标识",
-		"PermissionsID": "业务ID",
 	}
 }
 
@@ -74,11 +74,11 @@ func (ModulePermissions) ColDescriptions() map[string][]string {
 		"Name": []string{
 			"权限策略名称",
 		},
+		"PermissionID": []string{
+			"业务ID",
+		},
 		"PermissionKey": []string{
 			"权限标识",
-		},
-		"PermissionsID": []string{
-			"业务ID",
 		},
 	}
 }
@@ -91,12 +91,12 @@ func (m *ModulePermissions) FieldID() *github_com_eden_framework_sqlx_builder.Co
 	return ModulePermissionsTable.F(m.FieldKeyID())
 }
 
-func (ModulePermissions) FieldKeyPermissionsID() string {
-	return "PermissionsID"
+func (ModulePermissions) FieldKeyPermissionID() string {
+	return "PermissionID"
 }
 
-func (m *ModulePermissions) FieldPermissionsID() *github_com_eden_framework_sqlx_builder.Column {
-	return ModulePermissionsTable.F(m.FieldKeyPermissionsID())
+func (m *ModulePermissions) FieldPermissionID() *github_com_eden_framework_sqlx_builder.Column {
+	return ModulePermissionsTable.F(m.FieldKeyPermissionID())
 }
 
 func (ModulePermissions) FieldKeyModuleID() string {
@@ -155,7 +155,7 @@ func (m *ModulePermissions) IndexFieldNames() []string {
 	return []string{
 		"ID",
 		"ModuleID",
-		"PermissionsID",
+		"PermissionID",
 	}
 }
 
@@ -412,7 +412,7 @@ func (m *ModulePermissions) SoftDeleteByID(db github_com_eden_framework_sqlx.DBE
 
 }
 
-func (m *ModulePermissions) FetchByPermissionsID(db github_com_eden_framework_sqlx.DBExecutor) error {
+func (m *ModulePermissions) FetchByPermissionID(db github_com_eden_framework_sqlx.DBExecutor) error {
 
 	table := db.T(m)
 
@@ -421,10 +421,10 @@ func (m *ModulePermissions) FetchByPermissionsID(db github_com_eden_framework_sq
 			From(
 				db.T(m),
 				github_com_eden_framework_sqlx_builder.Where(github_com_eden_framework_sqlx_builder.And(
-					table.F("PermissionsID").Eq(m.PermissionsID),
+					table.F("PermissionID").Eq(m.PermissionID),
 					table.F("DeletedAt").Eq(m.DeletedAt),
 				)),
-				github_com_eden_framework_sqlx_builder.Comment("ModulePermissions.FetchByPermissionsID"),
+				github_com_eden_framework_sqlx_builder.Comment("ModulePermissions.FetchByPermissionID"),
 			),
 		m,
 	)
@@ -432,7 +432,7 @@ func (m *ModulePermissions) FetchByPermissionsID(db github_com_eden_framework_sq
 	return err
 }
 
-func (m *ModulePermissions) UpdateByPermissionsIDWithMap(db github_com_eden_framework_sqlx.DBExecutor, fieldValues github_com_eden_framework_sqlx_builder.FieldValues) error {
+func (m *ModulePermissions) UpdateByPermissionIDWithMap(db github_com_eden_framework_sqlx.DBExecutor, fieldValues github_com_eden_framework_sqlx_builder.FieldValues) error {
 
 	if _, ok := fieldValues["UpdatedAt"]; !ok {
 		fieldValues["UpdatedAt"] = github_com_eden_framework_sqlx_datatypes.Timestamp(time.Now())
@@ -444,10 +444,10 @@ func (m *ModulePermissions) UpdateByPermissionsIDWithMap(db github_com_eden_fram
 		github_com_eden_framework_sqlx_builder.Update(db.T(m)).
 			Where(
 				github_com_eden_framework_sqlx_builder.And(
-					table.F("PermissionsID").Eq(m.PermissionsID),
+					table.F("PermissionID").Eq(m.PermissionID),
 					table.F("DeletedAt").Eq(m.DeletedAt),
 				),
-				github_com_eden_framework_sqlx_builder.Comment("ModulePermissions.UpdateByPermissionsIDWithMap"),
+				github_com_eden_framework_sqlx_builder.Comment("ModulePermissions.UpdateByPermissionIDWithMap"),
 			).
 			Set(table.AssignmentsByFieldValues(fieldValues)...),
 	)
@@ -458,21 +458,21 @@ func (m *ModulePermissions) UpdateByPermissionsIDWithMap(db github_com_eden_fram
 
 	rowsAffected, _ := result.RowsAffected()
 	if rowsAffected == 0 {
-		return m.FetchByPermissionsID(db)
+		return m.FetchByPermissionID(db)
 	}
 
 	return nil
 
 }
 
-func (m *ModulePermissions) UpdateByPermissionsIDWithStruct(db github_com_eden_framework_sqlx.DBExecutor, zeroFields ...string) error {
+func (m *ModulePermissions) UpdateByPermissionIDWithStruct(db github_com_eden_framework_sqlx.DBExecutor, zeroFields ...string) error {
 
 	fieldValues := github_com_eden_framework_sqlx_builder.FieldValuesFromStructByNonZero(m, zeroFields...)
-	return m.UpdateByPermissionsIDWithMap(db, fieldValues)
+	return m.UpdateByPermissionIDWithMap(db, fieldValues)
 
 }
 
-func (m *ModulePermissions) FetchByPermissionsIDForUpdate(db github_com_eden_framework_sqlx.DBExecutor) error {
+func (m *ModulePermissions) FetchByPermissionIDForUpdate(db github_com_eden_framework_sqlx.DBExecutor) error {
 
 	table := db.T(m)
 
@@ -481,11 +481,11 @@ func (m *ModulePermissions) FetchByPermissionsIDForUpdate(db github_com_eden_fra
 			From(
 				db.T(m),
 				github_com_eden_framework_sqlx_builder.Where(github_com_eden_framework_sqlx_builder.And(
-					table.F("PermissionsID").Eq(m.PermissionsID),
+					table.F("PermissionID").Eq(m.PermissionID),
 					table.F("DeletedAt").Eq(m.DeletedAt),
 				)),
 				github_com_eden_framework_sqlx_builder.ForUpdate(),
-				github_com_eden_framework_sqlx_builder.Comment("ModulePermissions.FetchByPermissionsIDForUpdate"),
+				github_com_eden_framework_sqlx_builder.Comment("ModulePermissions.FetchByPermissionIDForUpdate"),
 			),
 		m,
 	)
@@ -493,7 +493,7 @@ func (m *ModulePermissions) FetchByPermissionsIDForUpdate(db github_com_eden_fra
 	return err
 }
 
-func (m *ModulePermissions) DeleteByPermissionsID(db github_com_eden_framework_sqlx.DBExecutor) error {
+func (m *ModulePermissions) DeleteByPermissionID(db github_com_eden_framework_sqlx.DBExecutor) error {
 
 	table := db.T(m)
 
@@ -501,16 +501,16 @@ func (m *ModulePermissions) DeleteByPermissionsID(db github_com_eden_framework_s
 		github_com_eden_framework_sqlx_builder.Delete().
 			From(db.T(m),
 				github_com_eden_framework_sqlx_builder.Where(github_com_eden_framework_sqlx_builder.And(
-					table.F("PermissionsID").Eq(m.PermissionsID),
+					table.F("PermissionID").Eq(m.PermissionID),
 					table.F("DeletedAt").Eq(m.DeletedAt),
 				)),
-				github_com_eden_framework_sqlx_builder.Comment("ModulePermissions.DeleteByPermissionsID"),
+				github_com_eden_framework_sqlx_builder.Comment("ModulePermissions.DeleteByPermissionID"),
 			))
 
 	return err
 }
 
-func (m *ModulePermissions) SoftDeleteByPermissionsID(db github_com_eden_framework_sqlx.DBExecutor) error {
+func (m *ModulePermissions) SoftDeleteByPermissionID(db github_com_eden_framework_sqlx.DBExecutor) error {
 
 	table := db.T(m)
 
@@ -527,10 +527,10 @@ func (m *ModulePermissions) SoftDeleteByPermissionsID(db github_com_eden_framewo
 		github_com_eden_framework_sqlx_builder.Update(db.T(m)).
 			Where(
 				github_com_eden_framework_sqlx_builder.And(
-					table.F("PermissionsID").Eq(m.PermissionsID),
+					table.F("PermissionID").Eq(m.PermissionID),
 					table.F("DeletedAt").Eq(m.DeletedAt),
 				),
-				github_com_eden_framework_sqlx_builder.Comment("ModulePermissions.SoftDeleteByPermissionsID"),
+				github_com_eden_framework_sqlx_builder.Comment("ModulePermissions.SoftDeleteByPermissionID"),
 			).
 			Set(table.AssignmentsByFieldValues(fieldValues)...),
 	)
@@ -625,7 +625,7 @@ func (m *ModulePermissions) BatchFetchByModuleIDList(db github_com_eden_framewor
 
 }
 
-func (m *ModulePermissions) BatchFetchByPermissionsIDList(db github_com_eden_framework_sqlx.DBExecutor, values []uint64) ([]ModulePermissions, error) {
+func (m *ModulePermissions) BatchFetchByPermissionIDList(db github_com_eden_framework_sqlx.DBExecutor, values []uint64) ([]ModulePermissions, error) {
 
 	if len(values) == 0 {
 		return nil, nil
@@ -633,7 +633,7 @@ func (m *ModulePermissions) BatchFetchByPermissionsIDList(db github_com_eden_fra
 
 	table := db.T(m)
 
-	condition := table.F("PermissionsID").In(values)
+	condition := table.F("PermissionID").In(values)
 
 	return m.List(db, condition)
 

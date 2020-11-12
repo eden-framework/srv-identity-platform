@@ -1,4 +1,4 @@
-package services
+package permissions
 
 import "github.com/eden-framework/courier"
 
@@ -9,5 +9,5 @@ type Group struct {
 }
 
 func (Group) Path() string {
-	return "/services"
+	return "/permissions"
 }
