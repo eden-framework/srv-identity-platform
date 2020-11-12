@@ -8,14 +8,18 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func (c *Controller) CreateModuleClient(opt databases.BaseClient) (cli *databases.ModuleClients, err error) {
+func (c *Controller) CreateModuleClient(moduleID uint64, opt databases.BaseClient) (cli *databases.ModuleClients, err error) {
 	id, err := client.GetUniqueID(c.clientID)
 	if err != nil {
 		return
 	}
 	cli = &databases.ModuleClients{
-		ClientID:   id,
-		BaseClient: opt,
+		ClientID: id,
+		ModuleID: moduleID,
+		// TODO generate
+		AccessKey:    "",
+		AccessSecret: "",
+		BaseClient:   opt,
 	}
 	err = cli.Create(c.db)
 	if err != nil {

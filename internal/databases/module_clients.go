@@ -14,6 +14,12 @@ type ModuleClients struct {
 	datatypes.PrimaryID
 	// 业务ID
 	ClientID uint64 `json:"clientID,string" db:"f_client_id"`
+	// 所属模块
+	ModuleID uint64 `json:"moduleID,string" db:"f_module_id"`
+	// AccessKey
+	AccessKey string `json:"accessKey" db:"f_access_key"`
+	// AccessSecret
+	AccessSecret string `json:"accessSecret" db:"f_accessSecret"`
 	BaseClient
 	datatypes.OperateTime
 }
@@ -21,10 +27,4 @@ type ModuleClients struct {
 type BaseClient struct {
 	// Endpoint
 	Endpoint string `json:"endpoint" db:"f_endpoint"`
-	// AccessKey
-	AccessKey string `json:"accessKey" db:"f_access_key"`
-	// AccessSecret
-	AccessSecret string `json:"accessSecret" db:"f_accessSecret"`
-	// 所属模块
-	ModuleID uint64 `json:"moduleID,string" db:"f_module_id"`
 }

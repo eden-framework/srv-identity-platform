@@ -8,13 +8,14 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func (c *Controller) CreateModule(opt databases.BaseModule) (module *databases.Modules, err error) {
+func (c *Controller) CreateModule(serviceID uint64, opt databases.BaseModule) (module *databases.Modules, err error) {
 	id, err := client.GetUniqueID(c.clientID)
 	if err != nil {
 		return
 	}
 	module = &databases.Modules{
 		ModuleID:   id,
+		ServiceID:  serviceID,
 		BaseModule: opt,
 	}
 	err = module.Create(c.db)

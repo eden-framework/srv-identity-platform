@@ -1,4 +1,4 @@
-package services
+package modules
 
 import (
 	"context"
@@ -11,36 +11,36 @@ import (
 )
 
 func init() {
-	Router.Register(courier.NewRouter(GetServices{}))
+	Router.Register(courier.NewRouter(GetModules{}))
 }
 
-// 批量获取Service
-type GetServices struct {
+// 批量获取模块
+type GetModules struct {
 	httpx.MethodGet
-	service.ServiceCondition
+	service.ModuleCondition
 	// 分页偏移量
 	Offset int64 `name:"offset" default:"0" in:"query"`
 	// 单页数据量
 	Limit int64 `name:"limit" default:"10" in:"query"`
 }
 
-func (req GetServices) Path() string {
+func (req GetModules) Path() string {
 	return ""
 }
 
-type GetServicesResult struct {
-	Data  []databases.Services `json:"data"`
-	Total int                  `json:"total"`
+type GetModulesResult struct {
+	Data  []databases.Modules `json:"data"`
+	Total int                 `json:"total"`
 }
 
-func (req GetServices) Output(ctx context.Context) (result interface{}, err error) {
-	svcs, count, err := service.NewController(global.Config.SlaveDB, global.ClientConfig.ID).GetServices(req.ServiceCondition, req.Offset, req.Limit)
+func (req GetModules) Output(ctx context.Context) (result interface{}, err error) {
+	data, count, err := service.NewController(global.Config.SlaveDB, global.ClientConfig.ID).GetModules(req.ModuleCondition, req.Offset, req.Limit)
 	if err != nil {
 		err = errors.InternalError.StatusError().WithDesc(err.Error())
 		return
 	}
-	result = GetServicesResult{
-		Data:  svcs,
+	result = GetModulesResult{
+		Data:  data,
 		Total: count,
 	}
 	return result, nil

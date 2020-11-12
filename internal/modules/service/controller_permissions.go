@@ -8,13 +8,14 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func (c *Controller) CreateModulePermission(opt databases.BasePermission) (per *databases.ModulePermissions, err error) {
+func (c *Controller) CreateModulePermission(moduleID uint64, opt databases.BasePermission) (per *databases.ModulePermissions, err error) {
 	id, err := client.GetUniqueID(c.clientID)
 	if err != nil {
 		return
 	}
 	per = &databases.ModulePermissions{
 		PermissionsID:  id,
+		ModuleID:       moduleID,
 		BasePermission: opt,
 	}
 	err = per.Create(c.db)

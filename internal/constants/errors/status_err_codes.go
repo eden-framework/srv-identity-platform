@@ -23,6 +23,10 @@ const (
 	UserNotFound
 	// @errTalk 未找到服务
 	ServiceNotFound
+	// @errTalk 未找到模块
+	ModuleNotFound
+	// @errTalk 未找到客户端配置
+	ClientNotFound
 )
 
 const (

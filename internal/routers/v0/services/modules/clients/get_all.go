@@ -1,4 +1,4 @@
-package services
+package clients
 
 import (
 	"context"
@@ -11,36 +11,36 @@ import (
 )
 
 func init() {
-	Router.Register(courier.NewRouter(GetServices{}))
+	Router.Register(courier.NewRouter(GetClients{}))
 }
 
-// 批量获取Service
-type GetServices struct {
+// 批量获取客户端
+type GetClients struct {
 	httpx.MethodGet
-	service.ServiceCondition
+	service.ModuleClientCondition
 	// 分页偏移量
 	Offset int64 `name:"offset" default:"0" in:"query"`
 	// 单页数据量
 	Limit int64 `name:"limit" default:"10" in:"query"`
 }
 
-func (req GetServices) Path() string {
+func (req GetClients) Path() string {
 	return ""
 }
 
-type GetServicesResult struct {
-	Data  []databases.Services `json:"data"`
-	Total int                  `json:"total"`
+type GetClientsResult struct {
+	Data  []databases.ModuleClients `json:"data"`
+	Total int                       `json:"total"`
 }
 
-func (req GetServices) Output(ctx context.Context) (result interface{}, err error) {
-	svcs, count, err := service.NewController(global.Config.SlaveDB, global.ClientConfig.ID).GetServices(req.ServiceCondition, req.Offset, req.Limit)
+func (req GetClients) Output(ctx context.Context) (result interface{}, err error) {
+	data, count, err := service.NewController(global.Config.SlaveDB, global.ClientConfig.ID).GetModuleClients(req.ModuleClientCondition, req.Offset, req.Limit)
 	if err != nil {
 		err = errors.InternalError.StatusError().WithDesc(err.Error())
 		return
 	}
-	result = GetServicesResult{
-		Data:  svcs,
+	result = GetClientsResult{
+		Data:  data,
 		Total: count,
 	}
 	return result, nil

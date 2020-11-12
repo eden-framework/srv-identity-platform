@@ -13,6 +13,8 @@ type ModulePermissions struct {
 	datatypes.PrimaryID
 	// 业务ID
 	PermissionsID uint64 `json:"permissionsID,string" db:"f_permissions_id"`
+	// 所属模块
+	ModuleID uint64 `json:"moduleID,string" db:"f_module_id"`
 	BasePermission
 	datatypes.OperateTime
 }
@@ -22,6 +24,4 @@ type BasePermission struct {
 	Name string `json:"name" db:"f_name"`
 	// 权限标识
 	PermissionKey string `json:"permissionKey" db:"f_permission_key"`
-	// 所属模块
-	ModuleID uint64 `json:"moduleID,string" db:"f_module_id"`
 }

@@ -111,12 +111,12 @@ func (m *ModuleClients) FieldClientID() *github_com_eden_framework_sqlx_builder.
 	return ModuleClientsTable.F(m.FieldKeyClientID())
 }
 
-func (ModuleClients) FieldKeyEndpoint() string {
-	return "Endpoint"
+func (ModuleClients) FieldKeyModuleID() string {
+	return "ModuleID"
 }
 
-func (m *ModuleClients) FieldEndpoint() *github_com_eden_framework_sqlx_builder.Column {
-	return ModuleClientsTable.F(m.FieldKeyEndpoint())
+func (m *ModuleClients) FieldModuleID() *github_com_eden_framework_sqlx_builder.Column {
+	return ModuleClientsTable.F(m.FieldKeyModuleID())
 }
 
 func (ModuleClients) FieldKeyAccessKey() string {
@@ -135,12 +135,12 @@ func (m *ModuleClients) FieldAccessSecret() *github_com_eden_framework_sqlx_buil
 	return ModuleClientsTable.F(m.FieldKeyAccessSecret())
 }
 
-func (ModuleClients) FieldKeyModuleID() string {
-	return "ModuleID"
+func (ModuleClients) FieldKeyEndpoint() string {
+	return "Endpoint"
 }
 
-func (m *ModuleClients) FieldModuleID() *github_com_eden_framework_sqlx_builder.Column {
-	return ModuleClientsTable.F(m.FieldKeyModuleID())
+func (m *ModuleClients) FieldEndpoint() *github_com_eden_framework_sqlx_builder.Column {
+	return ModuleClientsTable.F(m.FieldKeyEndpoint())
 }
 
 func (ModuleClients) FieldKeyCreatedAt() string {
@@ -433,133 +433,6 @@ func (m *ModuleClients) SoftDeleteByID(db github_com_eden_framework_sqlx.DBExecu
 
 }
 
-func (m *ModuleClients) FetchByAccessKey(db github_com_eden_framework_sqlx.DBExecutor) error {
-
-	table := db.T(m)
-
-	err := db.QueryExprAndScan(
-		github_com_eden_framework_sqlx_builder.Select(nil).
-			From(
-				db.T(m),
-				github_com_eden_framework_sqlx_builder.Where(github_com_eden_framework_sqlx_builder.And(
-					table.F("AccessKey").Eq(m.AccessKey),
-					table.F("DeletedAt").Eq(m.DeletedAt),
-				)),
-				github_com_eden_framework_sqlx_builder.Comment("ModuleClients.FetchByAccessKey"),
-			),
-		m,
-	)
-
-	return err
-}
-
-func (m *ModuleClients) UpdateByAccessKeyWithMap(db github_com_eden_framework_sqlx.DBExecutor, fieldValues github_com_eden_framework_sqlx_builder.FieldValues) error {
-
-	if _, ok := fieldValues["UpdatedAt"]; !ok {
-		fieldValues["UpdatedAt"] = github_com_eden_framework_sqlx_datatypes.Timestamp(time.Now())
-	}
-
-	table := db.T(m)
-
-	result, err := db.ExecExpr(
-		github_com_eden_framework_sqlx_builder.Update(db.T(m)).
-			Where(
-				github_com_eden_framework_sqlx_builder.And(
-					table.F("AccessKey").Eq(m.AccessKey),
-					table.F("DeletedAt").Eq(m.DeletedAt),
-				),
-				github_com_eden_framework_sqlx_builder.Comment("ModuleClients.UpdateByAccessKeyWithMap"),
-			).
-			Set(table.AssignmentsByFieldValues(fieldValues)...),
-	)
-
-	if err != nil {
-		return err
-	}
-
-	rowsAffected, _ := result.RowsAffected()
-	if rowsAffected == 0 {
-		return m.FetchByAccessKey(db)
-	}
-
-	return nil
-
-}
-
-func (m *ModuleClients) UpdateByAccessKeyWithStruct(db github_com_eden_framework_sqlx.DBExecutor, zeroFields ...string) error {
-
-	fieldValues := github_com_eden_framework_sqlx_builder.FieldValuesFromStructByNonZero(m, zeroFields...)
-	return m.UpdateByAccessKeyWithMap(db, fieldValues)
-
-}
-
-func (m *ModuleClients) FetchByAccessKeyForUpdate(db github_com_eden_framework_sqlx.DBExecutor) error {
-
-	table := db.T(m)
-
-	err := db.QueryExprAndScan(
-		github_com_eden_framework_sqlx_builder.Select(nil).
-			From(
-				db.T(m),
-				github_com_eden_framework_sqlx_builder.Where(github_com_eden_framework_sqlx_builder.And(
-					table.F("AccessKey").Eq(m.AccessKey),
-					table.F("DeletedAt").Eq(m.DeletedAt),
-				)),
-				github_com_eden_framework_sqlx_builder.ForUpdate(),
-				github_com_eden_framework_sqlx_builder.Comment("ModuleClients.FetchByAccessKeyForUpdate"),
-			),
-		m,
-	)
-
-	return err
-}
-
-func (m *ModuleClients) DeleteByAccessKey(db github_com_eden_framework_sqlx.DBExecutor) error {
-
-	table := db.T(m)
-
-	_, err := db.ExecExpr(
-		github_com_eden_framework_sqlx_builder.Delete().
-			From(db.T(m),
-				github_com_eden_framework_sqlx_builder.Where(github_com_eden_framework_sqlx_builder.And(
-					table.F("AccessKey").Eq(m.AccessKey),
-					table.F("DeletedAt").Eq(m.DeletedAt),
-				)),
-				github_com_eden_framework_sqlx_builder.Comment("ModuleClients.DeleteByAccessKey"),
-			))
-
-	return err
-}
-
-func (m *ModuleClients) SoftDeleteByAccessKey(db github_com_eden_framework_sqlx.DBExecutor) error {
-
-	table := db.T(m)
-
-	fieldValues := github_com_eden_framework_sqlx_builder.FieldValues{}
-	if _, ok := fieldValues["DeletedAt"]; !ok {
-		fieldValues["DeletedAt"] = github_com_eden_framework_sqlx_datatypes.Timestamp(time.Now())
-	}
-
-	if _, ok := fieldValues["UpdatedAt"]; !ok {
-		fieldValues["UpdatedAt"] = github_com_eden_framework_sqlx_datatypes.Timestamp(time.Now())
-	}
-
-	_, err := db.ExecExpr(
-		github_com_eden_framework_sqlx_builder.Update(db.T(m)).
-			Where(
-				github_com_eden_framework_sqlx_builder.And(
-					table.F("AccessKey").Eq(m.AccessKey),
-					table.F("DeletedAt").Eq(m.DeletedAt),
-				),
-				github_com_eden_framework_sqlx_builder.Comment("ModuleClients.SoftDeleteByAccessKey"),
-			).
-			Set(table.AssignmentsByFieldValues(fieldValues)...),
-	)
-
-	return err
-
-}
-
 func (m *ModuleClients) FetchByClientID(db github_com_eden_framework_sqlx.DBExecutor) error {
 
 	table := db.T(m)
@@ -679,6 +552,133 @@ func (m *ModuleClients) SoftDeleteByClientID(db github_com_eden_framework_sqlx.D
 					table.F("DeletedAt").Eq(m.DeletedAt),
 				),
 				github_com_eden_framework_sqlx_builder.Comment("ModuleClients.SoftDeleteByClientID"),
+			).
+			Set(table.AssignmentsByFieldValues(fieldValues)...),
+	)
+
+	return err
+
+}
+
+func (m *ModuleClients) FetchByAccessKey(db github_com_eden_framework_sqlx.DBExecutor) error {
+
+	table := db.T(m)
+
+	err := db.QueryExprAndScan(
+		github_com_eden_framework_sqlx_builder.Select(nil).
+			From(
+				db.T(m),
+				github_com_eden_framework_sqlx_builder.Where(github_com_eden_framework_sqlx_builder.And(
+					table.F("AccessKey").Eq(m.AccessKey),
+					table.F("DeletedAt").Eq(m.DeletedAt),
+				)),
+				github_com_eden_framework_sqlx_builder.Comment("ModuleClients.FetchByAccessKey"),
+			),
+		m,
+	)
+
+	return err
+}
+
+func (m *ModuleClients) UpdateByAccessKeyWithMap(db github_com_eden_framework_sqlx.DBExecutor, fieldValues github_com_eden_framework_sqlx_builder.FieldValues) error {
+
+	if _, ok := fieldValues["UpdatedAt"]; !ok {
+		fieldValues["UpdatedAt"] = github_com_eden_framework_sqlx_datatypes.Timestamp(time.Now())
+	}
+
+	table := db.T(m)
+
+	result, err := db.ExecExpr(
+		github_com_eden_framework_sqlx_builder.Update(db.T(m)).
+			Where(
+				github_com_eden_framework_sqlx_builder.And(
+					table.F("AccessKey").Eq(m.AccessKey),
+					table.F("DeletedAt").Eq(m.DeletedAt),
+				),
+				github_com_eden_framework_sqlx_builder.Comment("ModuleClients.UpdateByAccessKeyWithMap"),
+			).
+			Set(table.AssignmentsByFieldValues(fieldValues)...),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, _ := result.RowsAffected()
+	if rowsAffected == 0 {
+		return m.FetchByAccessKey(db)
+	}
+
+	return nil
+
+}
+
+func (m *ModuleClients) UpdateByAccessKeyWithStruct(db github_com_eden_framework_sqlx.DBExecutor, zeroFields ...string) error {
+
+	fieldValues := github_com_eden_framework_sqlx_builder.FieldValuesFromStructByNonZero(m, zeroFields...)
+	return m.UpdateByAccessKeyWithMap(db, fieldValues)
+
+}
+
+func (m *ModuleClients) FetchByAccessKeyForUpdate(db github_com_eden_framework_sqlx.DBExecutor) error {
+
+	table := db.T(m)
+
+	err := db.QueryExprAndScan(
+		github_com_eden_framework_sqlx_builder.Select(nil).
+			From(
+				db.T(m),
+				github_com_eden_framework_sqlx_builder.Where(github_com_eden_framework_sqlx_builder.And(
+					table.F("AccessKey").Eq(m.AccessKey),
+					table.F("DeletedAt").Eq(m.DeletedAt),
+				)),
+				github_com_eden_framework_sqlx_builder.ForUpdate(),
+				github_com_eden_framework_sqlx_builder.Comment("ModuleClients.FetchByAccessKeyForUpdate"),
+			),
+		m,
+	)
+
+	return err
+}
+
+func (m *ModuleClients) DeleteByAccessKey(db github_com_eden_framework_sqlx.DBExecutor) error {
+
+	table := db.T(m)
+
+	_, err := db.ExecExpr(
+		github_com_eden_framework_sqlx_builder.Delete().
+			From(db.T(m),
+				github_com_eden_framework_sqlx_builder.Where(github_com_eden_framework_sqlx_builder.And(
+					table.F("AccessKey").Eq(m.AccessKey),
+					table.F("DeletedAt").Eq(m.DeletedAt),
+				)),
+				github_com_eden_framework_sqlx_builder.Comment("ModuleClients.DeleteByAccessKey"),
+			))
+
+	return err
+}
+
+func (m *ModuleClients) SoftDeleteByAccessKey(db github_com_eden_framework_sqlx.DBExecutor) error {
+
+	table := db.T(m)
+
+	fieldValues := github_com_eden_framework_sqlx_builder.FieldValues{}
+	if _, ok := fieldValues["DeletedAt"]; !ok {
+		fieldValues["DeletedAt"] = github_com_eden_framework_sqlx_datatypes.Timestamp(time.Now())
+	}
+
+	if _, ok := fieldValues["UpdatedAt"]; !ok {
+		fieldValues["UpdatedAt"] = github_com_eden_framework_sqlx_datatypes.Timestamp(time.Now())
+	}
+
+	_, err := db.ExecExpr(
+		github_com_eden_framework_sqlx_builder.Update(db.T(m)).
+			Where(
+				github_com_eden_framework_sqlx_builder.And(
+					table.F("AccessKey").Eq(m.AccessKey),
+					table.F("DeletedAt").Eq(m.DeletedAt),
+				),
+				github_com_eden_framework_sqlx_builder.Comment("ModuleClients.SoftDeleteByAccessKey"),
 			).
 			Set(table.AssignmentsByFieldValues(fieldValues)...),
 	)

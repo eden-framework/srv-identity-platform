@@ -103,6 +103,14 @@ func (m *Modules) FieldModuleID() *github_com_eden_framework_sqlx_builder.Column
 	return ModulesTable.F(m.FieldKeyModuleID())
 }
 
+func (Modules) FieldKeyServiceID() string {
+	return "ServiceID"
+}
+
+func (m *Modules) FieldServiceID() *github_com_eden_framework_sqlx_builder.Column {
+	return ModulesTable.F(m.FieldKeyServiceID())
+}
+
 func (Modules) FieldKeyModuleKey() string {
 	return "ModuleKey"
 }
@@ -125,14 +133,6 @@ func (Modules) FieldKeyComment() string {
 
 func (m *Modules) FieldComment() *github_com_eden_framework_sqlx_builder.Column {
 	return ModulesTable.F(m.FieldKeyComment())
-}
-
-func (Modules) FieldKeyServiceID() string {
-	return "ServiceID"
-}
-
-func (m *Modules) FieldServiceID() *github_com_eden_framework_sqlx_builder.Column {
-	return ModulesTable.F(m.FieldKeyServiceID())
 }
 
 func (Modules) FieldKeyCreatedAt() string {

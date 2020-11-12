@@ -13,6 +13,8 @@ type Modules struct {
 	datatypes.PrimaryID
 	// 业务ID
 	ModuleID uint64 `json:"moduleID,string" db:"f_module_id"`
+	// 所属服务
+	ServiceID uint64 `json:"serviceID,string" db:"f_service_id"`
 	BaseModule
 	datatypes.OperateTime
 }
@@ -24,6 +26,4 @@ type BaseModule struct {
 	Name string `json:"name" db:"f_name"`
 	// 描述
 	Comment string `json:"comment,omitempty" db:"f_comment,default=''"`
-	// 所属服务
-	ServiceID uint64 `json:"serviceID,string" db:"f_service_id"`
 }
