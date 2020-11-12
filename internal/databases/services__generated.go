@@ -15,14 +15,14 @@ func (Services) PrimaryKey() []string {
 	}
 }
 
-func (Services) UniqueIndexUServicesID() string {
-	return "U_services_id"
+func (Services) UniqueIndexUServiceID() string {
+	return "U_service_id"
 }
 
 func (Services) UniqueIndexes() github_com_eden_framework_sqlx_builder.Indexes {
 	return github_com_eden_framework_sqlx_builder.Indexes{
-		"U_services_id": []string{
-			"ServicesID",
+		"U_service_id": []string{
+			"ServiceID",
 			"DeletedAt",
 		},
 	}
@@ -32,8 +32,8 @@ func (Services) Comments() map[string]string {
 	return map[string]string{
 		"Comment":    "介绍",
 		"Name":       "服务名称",
+		"ServiceID":  "业务ID",
 		"ServiceKey": "服务标识",
-		"ServicesID": "业务ID",
 	}
 }
 
@@ -66,11 +66,11 @@ func (Services) ColDescriptions() map[string][]string {
 		"Name": []string{
 			"服务名称",
 		},
+		"ServiceID": []string{
+			"业务ID",
+		},
 		"ServiceKey": []string{
 			"服务标识",
-		},
-		"ServicesID": []string{
-			"业务ID",
 		},
 	}
 }
@@ -83,12 +83,12 @@ func (m *Services) FieldID() *github_com_eden_framework_sqlx_builder.Column {
 	return ServicesTable.F(m.FieldKeyID())
 }
 
-func (Services) FieldKeyServicesID() string {
-	return "ServicesID"
+func (Services) FieldKeyServiceID() string {
+	return "ServiceID"
 }
 
-func (m *Services) FieldServicesID() *github_com_eden_framework_sqlx_builder.Column {
-	return ServicesTable.F(m.FieldKeyServicesID())
+func (m *Services) FieldServiceID() *github_com_eden_framework_sqlx_builder.Column {
+	return ServicesTable.F(m.FieldKeyServiceID())
 }
 
 func (Services) FieldKeyServiceKey() string {
@@ -146,7 +146,7 @@ func (Services) ColRelations() map[string][]string {
 func (m *Services) IndexFieldNames() []string {
 	return []string{
 		"ID",
-		"ServicesID",
+		"ServiceID",
 	}
 }
 
@@ -403,7 +403,7 @@ func (m *Services) SoftDeleteByID(db github_com_eden_framework_sqlx.DBExecutor) 
 
 }
 
-func (m *Services) FetchByServicesID(db github_com_eden_framework_sqlx.DBExecutor) error {
+func (m *Services) FetchByServiceID(db github_com_eden_framework_sqlx.DBExecutor) error {
 
 	table := db.T(m)
 
@@ -412,10 +412,10 @@ func (m *Services) FetchByServicesID(db github_com_eden_framework_sqlx.DBExecuto
 			From(
 				db.T(m),
 				github_com_eden_framework_sqlx_builder.Where(github_com_eden_framework_sqlx_builder.And(
-					table.F("ServicesID").Eq(m.ServicesID),
+					table.F("ServiceID").Eq(m.ServiceID),
 					table.F("DeletedAt").Eq(m.DeletedAt),
 				)),
-				github_com_eden_framework_sqlx_builder.Comment("Services.FetchByServicesID"),
+				github_com_eden_framework_sqlx_builder.Comment("Services.FetchByServiceID"),
 			),
 		m,
 	)
@@ -423,7 +423,7 @@ func (m *Services) FetchByServicesID(db github_com_eden_framework_sqlx.DBExecuto
 	return err
 }
 
-func (m *Services) UpdateByServicesIDWithMap(db github_com_eden_framework_sqlx.DBExecutor, fieldValues github_com_eden_framework_sqlx_builder.FieldValues) error {
+func (m *Services) UpdateByServiceIDWithMap(db github_com_eden_framework_sqlx.DBExecutor, fieldValues github_com_eden_framework_sqlx_builder.FieldValues) error {
 
 	if _, ok := fieldValues["UpdatedAt"]; !ok {
 		fieldValues["UpdatedAt"] = github_com_eden_framework_sqlx_datatypes.Timestamp(time.Now())
@@ -435,10 +435,10 @@ func (m *Services) UpdateByServicesIDWithMap(db github_com_eden_framework_sqlx.D
 		github_com_eden_framework_sqlx_builder.Update(db.T(m)).
 			Where(
 				github_com_eden_framework_sqlx_builder.And(
-					table.F("ServicesID").Eq(m.ServicesID),
+					table.F("ServiceID").Eq(m.ServiceID),
 					table.F("DeletedAt").Eq(m.DeletedAt),
 				),
-				github_com_eden_framework_sqlx_builder.Comment("Services.UpdateByServicesIDWithMap"),
+				github_com_eden_framework_sqlx_builder.Comment("Services.UpdateByServiceIDWithMap"),
 			).
 			Set(table.AssignmentsByFieldValues(fieldValues)...),
 	)
@@ -449,21 +449,21 @@ func (m *Services) UpdateByServicesIDWithMap(db github_com_eden_framework_sqlx.D
 
 	rowsAffected, _ := result.RowsAffected()
 	if rowsAffected == 0 {
-		return m.FetchByServicesID(db)
+		return m.FetchByServiceID(db)
 	}
 
 	return nil
 
 }
 
-func (m *Services) UpdateByServicesIDWithStruct(db github_com_eden_framework_sqlx.DBExecutor, zeroFields ...string) error {
+func (m *Services) UpdateByServiceIDWithStruct(db github_com_eden_framework_sqlx.DBExecutor, zeroFields ...string) error {
 
 	fieldValues := github_com_eden_framework_sqlx_builder.FieldValuesFromStructByNonZero(m, zeroFields...)
-	return m.UpdateByServicesIDWithMap(db, fieldValues)
+	return m.UpdateByServiceIDWithMap(db, fieldValues)
 
 }
 
-func (m *Services) FetchByServicesIDForUpdate(db github_com_eden_framework_sqlx.DBExecutor) error {
+func (m *Services) FetchByServiceIDForUpdate(db github_com_eden_framework_sqlx.DBExecutor) error {
 
 	table := db.T(m)
 
@@ -472,11 +472,11 @@ func (m *Services) FetchByServicesIDForUpdate(db github_com_eden_framework_sqlx.
 			From(
 				db.T(m),
 				github_com_eden_framework_sqlx_builder.Where(github_com_eden_framework_sqlx_builder.And(
-					table.F("ServicesID").Eq(m.ServicesID),
+					table.F("ServiceID").Eq(m.ServiceID),
 					table.F("DeletedAt").Eq(m.DeletedAt),
 				)),
 				github_com_eden_framework_sqlx_builder.ForUpdate(),
-				github_com_eden_framework_sqlx_builder.Comment("Services.FetchByServicesIDForUpdate"),
+				github_com_eden_framework_sqlx_builder.Comment("Services.FetchByServiceIDForUpdate"),
 			),
 		m,
 	)
@@ -484,7 +484,7 @@ func (m *Services) FetchByServicesIDForUpdate(db github_com_eden_framework_sqlx.
 	return err
 }
 
-func (m *Services) DeleteByServicesID(db github_com_eden_framework_sqlx.DBExecutor) error {
+func (m *Services) DeleteByServiceID(db github_com_eden_framework_sqlx.DBExecutor) error {
 
 	table := db.T(m)
 
@@ -492,16 +492,16 @@ func (m *Services) DeleteByServicesID(db github_com_eden_framework_sqlx.DBExecut
 		github_com_eden_framework_sqlx_builder.Delete().
 			From(db.T(m),
 				github_com_eden_framework_sqlx_builder.Where(github_com_eden_framework_sqlx_builder.And(
-					table.F("ServicesID").Eq(m.ServicesID),
+					table.F("ServiceID").Eq(m.ServiceID),
 					table.F("DeletedAt").Eq(m.DeletedAt),
 				)),
-				github_com_eden_framework_sqlx_builder.Comment("Services.DeleteByServicesID"),
+				github_com_eden_framework_sqlx_builder.Comment("Services.DeleteByServiceID"),
 			))
 
 	return err
 }
 
-func (m *Services) SoftDeleteByServicesID(db github_com_eden_framework_sqlx.DBExecutor) error {
+func (m *Services) SoftDeleteByServiceID(db github_com_eden_framework_sqlx.DBExecutor) error {
 
 	table := db.T(m)
 
@@ -518,10 +518,10 @@ func (m *Services) SoftDeleteByServicesID(db github_com_eden_framework_sqlx.DBEx
 		github_com_eden_framework_sqlx_builder.Update(db.T(m)).
 			Where(
 				github_com_eden_framework_sqlx_builder.And(
-					table.F("ServicesID").Eq(m.ServicesID),
+					table.F("ServiceID").Eq(m.ServiceID),
 					table.F("DeletedAt").Eq(m.DeletedAt),
 				),
-				github_com_eden_framework_sqlx_builder.Comment("Services.SoftDeleteByServicesID"),
+				github_com_eden_framework_sqlx_builder.Comment("Services.SoftDeleteByServiceID"),
 			).
 			Set(table.AssignmentsByFieldValues(fieldValues)...),
 	)
@@ -602,7 +602,7 @@ func (m *Services) BatchFetchByIDList(db github_com_eden_framework_sqlx.DBExecut
 
 }
 
-func (m *Services) BatchFetchByServicesIDList(db github_com_eden_framework_sqlx.DBExecutor, values []uint64) ([]Services, error) {
+func (m *Services) BatchFetchByServiceIDList(db github_com_eden_framework_sqlx.DBExecutor, values []uint64) ([]Services, error) {
 
 	if len(values) == 0 {
 		return nil, nil
@@ -610,7 +610,7 @@ func (m *Services) BatchFetchByServicesIDList(db github_com_eden_framework_sqlx.
 
 	table := db.T(m)
 
-	condition := table.F("ServicesID").In(values)
+	condition := table.F("ServiceID").In(values)
 
 	return m.List(db, condition)
 

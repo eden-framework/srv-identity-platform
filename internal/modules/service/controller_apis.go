@@ -70,3 +70,18 @@ func (c *Controller) GetModulePermissionApiByApiID(id uint64) (model *databases.
 	}
 	return
 }
+
+func (c *Controller) DeleteModulePermissionApi(id uint64, soft bool) (err error) {
+	model := &databases.ModulePermissionApi{
+		ApiID: id,
+	}
+	if soft {
+		err = model.SoftDeleteByApiID(c.db)
+	} else {
+		err = model.DeleteByApiID(c.db)
+	}
+	if err != nil {
+		logrus.Errorf("service.Controller.DeleteModulePermissionApi err: %v, id: %d, soft: %v", err, id, soft)
+	}
+	return
+}

@@ -70,3 +70,18 @@ func (c *Controller) GetModuleClientByClientID(id uint64) (model *databases.Modu
 	}
 	return
 }
+
+func (c *Controller) DeleteModuleClient(id uint64, soft bool) (err error) {
+	model := &databases.ModuleClients{
+		ClientID: id,
+	}
+	if soft {
+		err = model.SoftDeleteByClientID(c.db)
+	} else {
+		err = model.DeleteByClientID(c.db)
+	}
+	if err != nil {
+		logrus.Errorf("service.Controller.DeleteModuleClient err: %v, id: %d, soft: %v", err, id, soft)
+	}
+	return
+}

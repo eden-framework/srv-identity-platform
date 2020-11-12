@@ -14,7 +14,7 @@ func (c *Controller) CreateService(opt databases.BaseService) (service *database
 		return
 	}
 	service = &databases.Services{
-		ServicesID:  id,
+		ServiceID:   id,
 		BaseService: opt,
 	}
 	err = service.Create(c.db)
@@ -26,9 +26,9 @@ func (c *Controller) CreateService(opt databases.BaseService) (service *database
 
 func (c *Controller) UpdateService(id uint64, opt UpdateOption, zeroFieldNames ...string) error {
 	m := &databases.Services{
-		ServicesID: id,
+		ServiceID: id,
 	}
-	err := m.FetchByServicesID(c.db)
+	err := m.FetchByServiceID(c.db)
 	if err != nil {
 		if !sqlx.DBErr(err).IsNotFound() {
 			logrus.Errorf("service.Controller.UpdateService FetchByServicesID err: %v, id: %d, opt: %+v", err, id, opt)
@@ -37,7 +37,7 @@ func (c *Controller) UpdateService(id uint64, opt UpdateOption, zeroFieldNames .
 	}
 
 	fieldValues := opt.ToUpdateFieldValues(zeroFieldNames...)
-	err = m.UpdateByServicesIDWithMap(c.db, fieldValues)
+	err = m.UpdateByServiceIDWithMap(c.db, fieldValues)
 	if err != nil {
 		logrus.Errorf("service.Controller.UpdateService UpdateByServicesIDWithMap err: %v, id: %d, opt: %+v, fieldValues: %+v", err, id, opt, fieldValues)
 	}
@@ -62,11 +62,26 @@ func (c *Controller) GetServices(condition Condition, offset, limit int64) ([]da
 
 func (c *Controller) GetServiceByServiceID(id uint64) (model *databases.Services, err error) {
 	model = &databases.Services{
-		ServicesID: id,
+		ServiceID: id,
 	}
-	err = model.FetchByServicesID(c.db)
+	err = model.FetchByServiceID(c.db)
 	if err != nil && !sqlx.DBErr(err).IsNotFound() {
 		logrus.Errorf("service.Controller.GetServiceByServiceID err: %v, id: %d", err, id)
+	}
+	return
+}
+
+func (c *Controller) DeleteService(id uint64, soft bool) (err error) {
+	model := &databases.Services{
+		ServiceID: id,
+	}
+	if soft {
+		err = model.SoftDeleteByServiceID(c.db)
+	} else {
+		err = model.DeleteByServiceID(c.db)
+	}
+	if err != nil {
+		logrus.Errorf("service.Controller.DeleteService err: %v, id: %d, soft: %v", err, id, soft)
 	}
 	return
 }

@@ -16,7 +16,7 @@ type LoginByDynamicCode struct {
 }
 
 func (req LoginByDynamicCode) Path() string {
-	return "/by-dynamic-code"
+	return "/dynamic-code"
 }
 
 func (req LoginByDynamicCode) Output(ctx context.Context) (result interface{}, err error) {

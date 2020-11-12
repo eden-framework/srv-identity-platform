@@ -70,3 +70,18 @@ func (c *Controller) GetModulePermissionByPermissionID(id uint64) (model *databa
 	}
 	return
 }
+
+func (c *Controller) DeleteModulePermission(id uint64, soft bool) (err error) {
+	model := &databases.ModulePermissions{
+		PermissionsID: id,
+	}
+	if soft {
+		err = model.SoftDeleteByPermissionsID(c.db)
+	} else {
+		err = model.DeleteByPermissionsID(c.db)
+	}
+	if err != nil {
+		logrus.Errorf("service.Controller.DeleteModulePermission err: %v, id: %d, soft: %v", err, id, soft)
+	}
+	return
+}

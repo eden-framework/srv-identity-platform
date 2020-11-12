@@ -7,12 +7,12 @@ import (
 //go:generate eden generate model Modules --database Config.DB --with-comments
 //go:generate eden generate tag Modules --defaults=true
 // @def primary ID
-// @def unique_index U_modules_id ModulesID
+// @def unique_index U_module_id ModuleID
 // @def index I_service ServiceID
 type Modules struct {
 	datatypes.PrimaryID
 	// 业务ID
-	ModulesID uint64 `json:"modulesID,string" db:"f_modules_id"`
+	ModuleID uint64 `json:"moduleID,string" db:"f_module_id"`
 	BaseModule
 	datatypes.OperateTime
 }

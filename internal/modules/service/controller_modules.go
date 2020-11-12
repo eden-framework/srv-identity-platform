@@ -14,7 +14,7 @@ func (c *Controller) CreateModule(opt databases.BaseModule) (module *databases.M
 		return
 	}
 	module = &databases.Modules{
-		ModulesID:  id,
+		ModuleID:   id,
 		BaseModule: opt,
 	}
 	err = module.Create(c.db)
@@ -26,9 +26,9 @@ func (c *Controller) CreateModule(opt databases.BaseModule) (module *databases.M
 
 func (c *Controller) UpdateModule(id uint64, opt UpdateOption, zeroFieldNames ...string) error {
 	module := &databases.Modules{
-		ModulesID: id,
+		ModuleID: id,
 	}
-	err := module.FetchByModulesID(c.db)
+	err := module.FetchByModuleID(c.db)
 	if err != nil {
 		if !sqlx.DBErr(err).IsNotFound() {
 			logrus.Errorf("service.Controller.UpdateModule FetchByModulesID err: %v, id: %d, opt: %+v", err, id, opt)
@@ -37,7 +37,7 @@ func (c *Controller) UpdateModule(id uint64, opt UpdateOption, zeroFieldNames ..
 	}
 
 	fieldValues := opt.ToUpdateFieldValues(zeroFieldNames...)
-	err = module.UpdateByModulesIDWithMap(c.db, fieldValues)
+	err = module.UpdateByModuleIDWithMap(c.db, fieldValues)
 	if err != nil {
 		logrus.Errorf("service.Controller.UpdateModule UpdateByModulesIDWithMap err: %v, id: %d, opt: %+v, fieldValues: %+v", err, id, opt, fieldValues)
 	}
@@ -62,11 +62,26 @@ func (c *Controller) GetModules(condition Condition, offset, limit int64) ([]dat
 
 func (c *Controller) GetModuleByModuleID(id uint64) (model *databases.Modules, err error) {
 	model = &databases.Modules{
-		ModulesID: id,
+		ModuleID: id,
 	}
-	err = model.FetchByModulesID(c.db)
+	err = model.FetchByModuleID(c.db)
 	if err != nil && !sqlx.DBErr(err).IsNotFound() {
 		logrus.Errorf("service.Controller.GetModuleByModuleID err: %v, id: %d", err, id)
+	}
+	return
+}
+
+func (c *Controller) DeleteModule(id uint64, soft bool) (err error) {
+	model := &databases.Modules{
+		ModuleID: id,
+	}
+	if soft {
+		err = model.SoftDeleteByModuleID(c.db)
+	} else {
+		err = model.DeleteByModuleID(c.db)
+	}
+	if err != nil {
+		logrus.Errorf("service.Controller.DeleteModulePermission err: %v, id: %d, soft: %v", err, id, soft)
 	}
 	return
 }

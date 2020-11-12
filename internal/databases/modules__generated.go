@@ -23,14 +23,14 @@ func (Modules) Indexes() github_com_eden_framework_sqlx_builder.Indexes {
 	}
 }
 
-func (Modules) UniqueIndexUModulesID() string {
-	return "U_modules_id"
+func (Modules) UniqueIndexUModuleID() string {
+	return "U_module_id"
 }
 
 func (Modules) UniqueIndexes() github_com_eden_framework_sqlx_builder.Indexes {
 	return github_com_eden_framework_sqlx_builder.Indexes{
-		"U_modules_id": []string{
-			"ModulesID",
+		"U_module_id": []string{
+			"ModuleID",
 			"DeletedAt",
 		},
 	}
@@ -39,8 +39,8 @@ func (Modules) UniqueIndexes() github_com_eden_framework_sqlx_builder.Indexes {
 func (Modules) Comments() map[string]string {
 	return map[string]string{
 		"Comment":   "描述",
+		"ModuleID":  "业务ID",
 		"ModuleKey": "模块标识",
-		"ModulesID": "业务ID",
 		"Name":      "模块名称",
 		"ServiceID": "所属服务",
 	}
@@ -72,11 +72,11 @@ func (Modules) ColDescriptions() map[string][]string {
 		"Comment": []string{
 			"描述",
 		},
+		"ModuleID": []string{
+			"业务ID",
+		},
 		"ModuleKey": []string{
 			"模块标识",
-		},
-		"ModulesID": []string{
-			"业务ID",
 		},
 		"Name": []string{
 			"模块名称",
@@ -95,12 +95,12 @@ func (m *Modules) FieldID() *github_com_eden_framework_sqlx_builder.Column {
 	return ModulesTable.F(m.FieldKeyID())
 }
 
-func (Modules) FieldKeyModulesID() string {
-	return "ModulesID"
+func (Modules) FieldKeyModuleID() string {
+	return "ModuleID"
 }
 
-func (m *Modules) FieldModulesID() *github_com_eden_framework_sqlx_builder.Column {
-	return ModulesTable.F(m.FieldKeyModulesID())
+func (m *Modules) FieldModuleID() *github_com_eden_framework_sqlx_builder.Column {
+	return ModulesTable.F(m.FieldKeyModuleID())
 }
 
 func (Modules) FieldKeyModuleKey() string {
@@ -166,7 +166,7 @@ func (Modules) ColRelations() map[string][]string {
 func (m *Modules) IndexFieldNames() []string {
 	return []string{
 		"ID",
-		"ModulesID",
+		"ModuleID",
 		"ServiceID",
 	}
 }
@@ -424,7 +424,7 @@ func (m *Modules) SoftDeleteByID(db github_com_eden_framework_sqlx.DBExecutor) e
 
 }
 
-func (m *Modules) FetchByModulesID(db github_com_eden_framework_sqlx.DBExecutor) error {
+func (m *Modules) FetchByModuleID(db github_com_eden_framework_sqlx.DBExecutor) error {
 
 	table := db.T(m)
 
@@ -433,10 +433,10 @@ func (m *Modules) FetchByModulesID(db github_com_eden_framework_sqlx.DBExecutor)
 			From(
 				db.T(m),
 				github_com_eden_framework_sqlx_builder.Where(github_com_eden_framework_sqlx_builder.And(
-					table.F("ModulesID").Eq(m.ModulesID),
+					table.F("ModuleID").Eq(m.ModuleID),
 					table.F("DeletedAt").Eq(m.DeletedAt),
 				)),
-				github_com_eden_framework_sqlx_builder.Comment("Modules.FetchByModulesID"),
+				github_com_eden_framework_sqlx_builder.Comment("Modules.FetchByModuleID"),
 			),
 		m,
 	)
@@ -444,7 +444,7 @@ func (m *Modules) FetchByModulesID(db github_com_eden_framework_sqlx.DBExecutor)
 	return err
 }
 
-func (m *Modules) UpdateByModulesIDWithMap(db github_com_eden_framework_sqlx.DBExecutor, fieldValues github_com_eden_framework_sqlx_builder.FieldValues) error {
+func (m *Modules) UpdateByModuleIDWithMap(db github_com_eden_framework_sqlx.DBExecutor, fieldValues github_com_eden_framework_sqlx_builder.FieldValues) error {
 
 	if _, ok := fieldValues["UpdatedAt"]; !ok {
 		fieldValues["UpdatedAt"] = github_com_eden_framework_sqlx_datatypes.Timestamp(time.Now())
@@ -456,10 +456,10 @@ func (m *Modules) UpdateByModulesIDWithMap(db github_com_eden_framework_sqlx.DBE
 		github_com_eden_framework_sqlx_builder.Update(db.T(m)).
 			Where(
 				github_com_eden_framework_sqlx_builder.And(
-					table.F("ModulesID").Eq(m.ModulesID),
+					table.F("ModuleID").Eq(m.ModuleID),
 					table.F("DeletedAt").Eq(m.DeletedAt),
 				),
-				github_com_eden_framework_sqlx_builder.Comment("Modules.UpdateByModulesIDWithMap"),
+				github_com_eden_framework_sqlx_builder.Comment("Modules.UpdateByModuleIDWithMap"),
 			).
 			Set(table.AssignmentsByFieldValues(fieldValues)...),
 	)
@@ -470,21 +470,21 @@ func (m *Modules) UpdateByModulesIDWithMap(db github_com_eden_framework_sqlx.DBE
 
 	rowsAffected, _ := result.RowsAffected()
 	if rowsAffected == 0 {
-		return m.FetchByModulesID(db)
+		return m.FetchByModuleID(db)
 	}
 
 	return nil
 
 }
 
-func (m *Modules) UpdateByModulesIDWithStruct(db github_com_eden_framework_sqlx.DBExecutor, zeroFields ...string) error {
+func (m *Modules) UpdateByModuleIDWithStruct(db github_com_eden_framework_sqlx.DBExecutor, zeroFields ...string) error {
 
 	fieldValues := github_com_eden_framework_sqlx_builder.FieldValuesFromStructByNonZero(m, zeroFields...)
-	return m.UpdateByModulesIDWithMap(db, fieldValues)
+	return m.UpdateByModuleIDWithMap(db, fieldValues)
 
 }
 
-func (m *Modules) FetchByModulesIDForUpdate(db github_com_eden_framework_sqlx.DBExecutor) error {
+func (m *Modules) FetchByModuleIDForUpdate(db github_com_eden_framework_sqlx.DBExecutor) error {
 
 	table := db.T(m)
 
@@ -493,11 +493,11 @@ func (m *Modules) FetchByModulesIDForUpdate(db github_com_eden_framework_sqlx.DB
 			From(
 				db.T(m),
 				github_com_eden_framework_sqlx_builder.Where(github_com_eden_framework_sqlx_builder.And(
-					table.F("ModulesID").Eq(m.ModulesID),
+					table.F("ModuleID").Eq(m.ModuleID),
 					table.F("DeletedAt").Eq(m.DeletedAt),
 				)),
 				github_com_eden_framework_sqlx_builder.ForUpdate(),
-				github_com_eden_framework_sqlx_builder.Comment("Modules.FetchByModulesIDForUpdate"),
+				github_com_eden_framework_sqlx_builder.Comment("Modules.FetchByModuleIDForUpdate"),
 			),
 		m,
 	)
@@ -505,7 +505,7 @@ func (m *Modules) FetchByModulesIDForUpdate(db github_com_eden_framework_sqlx.DB
 	return err
 }
 
-func (m *Modules) DeleteByModulesID(db github_com_eden_framework_sqlx.DBExecutor) error {
+func (m *Modules) DeleteByModuleID(db github_com_eden_framework_sqlx.DBExecutor) error {
 
 	table := db.T(m)
 
@@ -513,16 +513,16 @@ func (m *Modules) DeleteByModulesID(db github_com_eden_framework_sqlx.DBExecutor
 		github_com_eden_framework_sqlx_builder.Delete().
 			From(db.T(m),
 				github_com_eden_framework_sqlx_builder.Where(github_com_eden_framework_sqlx_builder.And(
-					table.F("ModulesID").Eq(m.ModulesID),
+					table.F("ModuleID").Eq(m.ModuleID),
 					table.F("DeletedAt").Eq(m.DeletedAt),
 				)),
-				github_com_eden_framework_sqlx_builder.Comment("Modules.DeleteByModulesID"),
+				github_com_eden_framework_sqlx_builder.Comment("Modules.DeleteByModuleID"),
 			))
 
 	return err
 }
 
-func (m *Modules) SoftDeleteByModulesID(db github_com_eden_framework_sqlx.DBExecutor) error {
+func (m *Modules) SoftDeleteByModuleID(db github_com_eden_framework_sqlx.DBExecutor) error {
 
 	table := db.T(m)
 
@@ -539,10 +539,10 @@ func (m *Modules) SoftDeleteByModulesID(db github_com_eden_framework_sqlx.DBExec
 		github_com_eden_framework_sqlx_builder.Update(db.T(m)).
 			Where(
 				github_com_eden_framework_sqlx_builder.And(
-					table.F("ModulesID").Eq(m.ModulesID),
+					table.F("ModuleID").Eq(m.ModuleID),
 					table.F("DeletedAt").Eq(m.DeletedAt),
 				),
-				github_com_eden_framework_sqlx_builder.Comment("Modules.SoftDeleteByModulesID"),
+				github_com_eden_framework_sqlx_builder.Comment("Modules.SoftDeleteByModuleID"),
 			).
 			Set(table.AssignmentsByFieldValues(fieldValues)...),
 	)
@@ -623,7 +623,7 @@ func (m *Modules) BatchFetchByIDList(db github_com_eden_framework_sqlx.DBExecuto
 
 }
 
-func (m *Modules) BatchFetchByModulesIDList(db github_com_eden_framework_sqlx.DBExecutor, values []uint64) ([]Modules, error) {
+func (m *Modules) BatchFetchByModuleIDList(db github_com_eden_framework_sqlx.DBExecutor, values []uint64) ([]Modules, error) {
 
 	if len(values) == 0 {
 		return nil, nil
@@ -631,7 +631,7 @@ func (m *Modules) BatchFetchByModulesIDList(db github_com_eden_framework_sqlx.DB
 
 	table := db.T(m)
 
-	condition := table.F("ModulesID").In(values)
+	condition := table.F("ModuleID").In(values)
 
 	return m.List(db, condition)
 

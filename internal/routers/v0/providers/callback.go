@@ -35,7 +35,7 @@ type Callback struct {
 }
 
 func (req Callback) Path() string {
-	return "/callback"
+	return "/0/callback"
 }
 
 func (req Callback) Output(ctx context.Context) (result interface{}, err error) {

@@ -6,11 +6,10 @@ import (
 	"github.com/eden-framework/courier/httpx"
 	"github.com/eden-framework/srv-identity-platform/internal/constants/enums"
 	"github.com/eden-framework/srv-identity-platform/internal/modules/token"
-	"github.com/eden-framework/srv-identity-platform/internal/routers/v0/authorization"
 )
 
 func init() {
-	authorization.Router.Register(courier.NewRouter(ExchangeToken{}))
+	Router.Register(courier.NewRouter(ExchangeToken{}))
 }
 
 // 使用SecureCode颁发ClientAccessToken

@@ -21,6 +21,8 @@ const (
 	UserBindNotFound
 	// @errTalk 用户未找到
 	UserNotFound
+	// @errTalk 未找到服务
+	ServiceNotFound
 )
 
 const (

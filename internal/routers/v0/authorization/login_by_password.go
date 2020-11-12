@@ -16,7 +16,7 @@ type LoginByPassword struct {
 }
 
 func (req LoginByPassword) Path() string {
-	return "/by-password"
+	return "/password"
 }
 
 func (req LoginByPassword) Output(ctx context.Context) (result interface{}, err error) {
